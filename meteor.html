@@ -233,7 +233,7 @@
         document.getElementById('game-ui').style.display = 'block';
         const input = document.getElementById('type-input');
         input.value = ''; input.focus();
-        input.onblur = () => { if(isGameRunning) input.focus(); };
+        input.onblur = () => { if(isGameRunning) document.getElementById('type-input').focus(); };
 
         hp = 5; score = 0;
         activeMeteors.forEach(m => m.el.remove());
@@ -251,7 +251,6 @@
         spawnInterval = setInterval(spawnMeteor, spawnDelay);
     }
 
-    // 🌟 홀로그램 데이터 캡슐 생성 로직이 적용된 함수!
     function spawnMeteor() {
         if(!isGameRunning) return;
         const rId = currentPool[Math.floor(Math.random() * currentPool.length)];
@@ -275,7 +274,6 @@
         const el = document.createElement('div');
         el.className = 'meteor';
         
-        // 동적 테두리 및 네온 글로우 발광 효과 적용
         el.style.border = `1.5px solid ${color}`;
         el.style.boxShadow = `0 4px 15px rgba(0,0,0,0.6), inset 0 0 12px ${color}50, 0 0 10px ${color}80`;
         
@@ -284,7 +282,7 @@
         
         const startX = 15 + Math.random() * 70; 
         el.style.left = startX + '%'; 
-        el.style.top = '-80px'; // 캡슐이 약간 커졌으므로 조금 더 높은 곳에서 생성
+        el.style.top = '-80px'; 
         
         const fallSpeed = 0.3 + (currentLvl * 0.1) + (Math.random() * 0.1);
         activeMeteors.push({ el: el, answer: answerTxt.toLowerCase(), y: -80, speed: fallSpeed });
@@ -303,10 +301,11 @@
         if(isGameRunning) requestAnimationFrame(gameLoop);
     }
 
-    document.getElementById('type-input').addEventListener('input', function(e) {
-        if(!isGameRunning) return;
+    // 🔥 여기서부터가 핵폭탄급 꼼수(DOM 물리적 교체)가 적용된 이벤트 리스너입니다 🔥
+    document.addEventListener('input', function(e) {
+        if (e.target.id !== 'type-input' || !isGameRunning) return;
         
-        const val = this.value.trim().toLowerCase();
+        const val = e.target.value.trim().toLowerCase();
         let isHit = false;
 
         for(let i = 0; i < activeMeteors.length; i++) {
@@ -318,15 +317,20 @@
                 activeMeteors.splice(i, 1);
                 score += 10;
                 
-                const inputField = this;
-                inputField.blur();      
-                inputField.value = '';  
+                // 🔥 기존 입력창을 파괴하고 완전히 새로운 텍스트 입력창으로 교체합니다.
+                const oldInput = e.target;
+                const parent = oldInput.parentElement;
                 
-                setTimeout(() => {
-                    inputField.value = ''; 
-                    inputField.focus();    
-                }, 10);
-
+                const newInput = document.createElement('input');
+                newInput.type = 'text';
+                newInput.id = 'type-input';
+                newInput.autocomplete = 'off';
+                newInput.placeholder = '단어 입력 (막히면 Enter)';
+                newInput.onblur = () => { if(isGameRunning) document.getElementById('type-input').focus(); };
+                
+                parent.replaceChild(newInput, oldInput); 
+                newInput.focus(); // 생성 즉시 포커스
+                
                 checkLevelUp(); 
                 updateHUD();
                 if(score >= targetScore) gameOver(true);
@@ -339,18 +343,12 @@
         }
     });
 
-    document.getElementById('type-input').addEventListener('keydown', function(e) {
+    // 엔터키를 눌렀을 때 비우는 이벤트 역시 통째로 위임 방식으로 적용
+    document.addEventListener('keydown', function(e) {
+        if (e.target.id !== 'type-input') return;
         if(e.key === 'Enter') {
             e.preventDefault(); 
-            
-            const inputField = this;
-            inputField.blur();
-            inputField.value = ''; 
-            
-            setTimeout(() => {
-                inputField.value = '';
-                inputField.focus();
-            }, 10);
+            e.target.value = ''; 
         }
     });
 
