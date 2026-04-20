@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코스믹 메테오 - 마스터 에디션</title>
+    <style>
+        body {
+            margin: 0; padding: 0; overflow: hidden;
+            background-color: #05070a;
+            background-image: linear-gradient(rgba(5, 7, 10, 0.6), rgba(5, 7, 10, 0.8)), url('cosmos.png');
+            background-size: cover; background-position: center;
+            color: white; font-family: 'Orbitron', 'Malgun Gothic', sans-serif;
+        }
+
+        /* 🌟 사운드 토글 버튼 (스코어를 가리지 않게 top: 60px 적용) */
+        #sound-toggle-btn {
+            position: absolute; top: 60px; right: 20px; z-index: 3000;
+            padding: 10px 20px; background: #00ff88; border: none; border-radius: 5px;
+            font-weight: bold; color: black; cursor: pointer; font-family: 'Orbitron';
+            box-shadow: 0 4px 10px rgba(0,255,136,0.3); transition: 0.2s;
+        }
+
+        /* 메뉴 UI */
+        #menu-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.7); z-index: 100; backdrop-filter: blur(5px);
+        }
+        .menu-box {
+            background: rgba(15, 20, 25, 0.95); padding: 40px; border-radius: 15px;
+            border: 2px solid #00f3ff; text-align: center; box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+        }
+        .btn {
+            padding: 10px 20px; margin: 5px; border: none; border-radius: 5px;
+            font-weight: bold; cursor: pointer; font-family: inherit; transition: 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); }
+        .btn-speed { background: #333; color: white; border: 1px solid #666; }
+        .btn-speed.active { background: #00f3ff; color: black; border-color: #fff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); }
+        .btn-start { background: #00ff88; color: black; font-size: 18px; padding: 15px 30px; margin-top: 20px; width: 100%; }
+
+        /* 게임 UI */
+        #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; pointer-events: none; }
+        .top-bar {
+            position: absolute; top: 0; width: 100%; padding: 20px; display: flex;
+            justify-content: space-between; box-sizing: border-box; font-size: 20px; font-weight: bold;
+        }
+        #hp-bar { color: #ff4d4d; text-shadow: 0 0 10px red; }
+        #score-bar { color: #00ff88; text-shadow: 0 0 10px #00ff88; }
+        #level-indicator { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; font-size: 24px; position: absolute; left: 50%; transform: translateX(-50%);}
+        
+        .input-container { position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: center; pointer-events: auto; }
+        #type-input {
+            width: 300px; padding: 15px; font-size: 24px; text-align: center;
+            border: 3px solid #00f3ff; border-radius: 10px; background: rgba(0,0,0,0.8);
+            color: white; font-weight: bold; outline: none; box-shadow: 0 0 20px rgba(0,243,255,0.5);
+        }
+
+        /* 🌟 업그레이드된 운석 (홀로그램 데이터 캡슐) 스타일 */
+        .meteor {
+            position: absolute; text-align: center; white-space: nowrap;
+            background: rgba(10, 15, 25, 0.85);
+            border-radius: 12px;
+            padding: 8px 18px 10px 18px;
+            backdrop-filter: blur(4px);
+            transform: translateZ(0); 
+        }
+        .meteor .hint-type { 
+            font-size: 11px; color: #ddd; display: block; 
+            border-bottom: 1px dashed rgba(255,255,255,0.3);
+            padding-bottom: 4px; margin-bottom: 4px; letter-spacing: 1px;
+        }
+        .meteor .word { 
+            font-size: 26px; font-weight: bold; display: block;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .explosion {
+            position: absolute; font-size: 40px; color: #00ff88; font-weight: bold;
+            animation: pop 0.4s ease-out forwards; pointer-events: none; text-shadow: 0 0 20px #00ff88;
+        }
+        @keyframes pop { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+        #levelup-msg {
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 50px; color: #ffaa00; font-weight: bold; display: none;
+            text-shadow: 0 0 20px #ffaa00; z-index: 50; pointer-events: none;
+        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { transform: translateX(10px); } 75% { transform: translateX(-10px); } }
+        .shake { animation: shake 0.2s ease-in-out; }
+    </style>
+</head>
+<body>
+
+<button id="sound-toggle-btn" onclick="toggleSound()">🎵 사운드: ON</button>
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="elements.mp3" type="audio/mpeg">
+</audio>
+
+<div id="levelup-msg">LEVEL UP!</div>
+
+<div id="menu-screen">
+    <div class="menu-box">
+        <h1 style="color: #00f3ff; margin-top: 0;">☄️ METEOR DEFENSE</h1>
+        <p style="color: #aaa;">레벨당 300점 (총 5단계, 만점 1500점)</p>
+        
+        <h3 style="color: #fff; margin-bottom: 10px;">1. 구역 선택</h3>
+        <button class="btn btn-speed" onclick="selectPool('easy', this)">EASY (1-20)</button>
+        <button class="btn btn-speed" onclick="selectPool('hard', this)">HARD (31종)</button>
+        <button class="btn btn-speed active" onclick="selectPool('master', this)">MASTER (52종)</button>
+
+        <h3 style="color: #fff; margin-bottom: 10px; margin-top: 20px;">2. 시작 레벨</h3>
+        <div id="speed-buttons">
+            <button class="btn btn-speed active" onclick="selectSpeed(1, this)">LV 1</button>
+            <button class="btn btn-speed" onclick="selectSpeed(2, this)">LV 2</button>
+            <button class="btn btn-speed" onclick="selectSpeed(3, this)">LV 3</button>
+            <button class="btn btn-speed" onclick="selectSpeed(4, this)">LV 4</button>
+            <button class="btn btn-speed" onclick="selectSpeed(5, this)">LV 5</button>
+        </div>
+
+        <button class="btn btn-start" onclick="startGame()">MISSION START</button>
+        <a href="index.html" style="display:block; margin-top:15px; color:#666; text-decoration:none; font-size:13px;">[ 도감으로 돌아가기 ]</a>
+    </div>
+</div>
+
+<div id="game-ui">
+    <div class="top-bar">
+        <div id="hp-bar">SHIELD: ❤️❤️❤️❤️❤️</div>
+        <div id="level-indicator">LEVEL 1</div>
+        <div id="score-bar">SCORE: 0 / 1500</div>
+    </div>
+    <div class="input-container">
+        <input type="text" id="type-input" autocomplete="off" placeholder="단어 입력 (막히면 Enter)">
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const bgMusic = document.getElementById('bgMusic');
+    let isSoundOn = true;
+
+    function toggleSound() {
+        isSoundOn = !isSoundOn;
+        const btn = document.getElementById('sound-toggle-btn');
+        if(isSoundOn) {
+            btn.innerText = "🎵 사운드: ON";
+            btn.style.background = "#00ff88"; btn.style.color = "black";
+            if(isGameRunning) bgMusic.play();
+        } else {
+            btn.innerText = "🔇 사운드: OFF";
+            btn.style.background = "#ff4d4d"; btn.style.color = "white";
+            bgMusic.pause();
+        }
+    }
+
+    function playSound(type) {
+        try {
+            if(!isSoundOn) return; 
+            if(audioCtx.state === 'suspended') {
+                audioCtx.resume();
+                return; 
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            
+            if(type === 'hit') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if(type === 'damage') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(50, now + 0.2);
+                gain.gain.setValueAtTime(0.5, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now); osc.stop(now + 0.2);
+            } else if(type === 'levelup') {
+                osc.type = 'square'; osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(554, now + 0.1); osc.frequency.setValueAtTime(659, now + 0.2);
+                osc.frequency.setValueAtTime(880, now + 0.3); gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.5); 
+                osc.start(now); osc.stop(now + 0.5);
+            } else if(type === 'type') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(400, now);
+                gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            }
+        } catch (e) {
+            console.log("사운드 재생 에러 우회 완료:", e);
+        }
+    }
+
+    const easyIds = Array.from({length: 20}, (_, i) => String(i + 1));
+    const hardIds = [...easyIds, "26", "29", "30", "35", "47", "53", "56", "78", "79", "80", "82"];
+    const masterIds = [...Array.from({length: 30}, (_, i) => String(i + 1)), "35", "36", "37", "38", "42", "46", "47", "48", "50", "51", "53", "54", "55", "56", "74", "78", "79", "80", "82", "86", "92", "94"];
+
+    let currentPool = masterIds;
+    let currentLvl = 1;
+    let hp = 5;
+    let score = 0;
+    const targetScore = 1500; 
+    
+    let activeMeteors = [];
+    let gameInterval;
+    let spawnInterval;
+    let isGameRunning = false;
+
+    function selectPool(type, btn) {
+        if(type === 'easy') currentPool = easyIds;
+        else if(type === 'hard') currentPool = hardIds;
+        else currentPool = masterIds;
+        btn.parentNode.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function selectSpeed(lvl, btn) {
+        currentLvl = parseInt(lvl);
+        document.querySelectorAll('#speed-buttons .btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function startGame() {
+        if(isSoundOn) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            bgMusic.play(); 
+        }
+        
+        document.getElementById('menu-screen').style.display = 'none';
+        document.getElementById('game-ui').style.display = 'block';
+        const input = document.getElementById('type-input');
+        input.value = ''; input.focus();
+        input.onblur = () => { if(isGameRunning) input.focus(); };
+
+        hp = 5; score = 0;
+        activeMeteors.forEach(m => m.el.remove());
+        activeMeteors = [];
+        updateHUD();
+        
+        isGameRunning = true;
+        resetSpawnTimer();
+        gameInterval = requestAnimationFrame(gameLoop);
+    }
+
+    function resetSpawnTimer() {
+        if(spawnInterval) clearInterval(spawnInterval);
+        const spawnDelay = (3500 - (currentLvl * 500)) * 2; 
+        spawnInterval = setInterval(spawnMeteor, spawnDelay);
+    }
+
+    // 🌟 홀로그램 데이터 캡슐 생성 로직이 적용된 함수!
+    function spawnMeteor() {
+        if(!isGameRunning) return;
+        const rId = currentPool[Math.floor(Math.random() * currentPool.length)];
+        const target = elementDB[rId];
+        const types = ['sym2ko', 'ko2sym', 'num2ko', 'usage2ko'];
+        const qType = types[Math.floor(Math.random() * types.length)];
+        let displayTxt = "", answerTxt = "", hintLabel = "", color = "#fff";
+
+        if(qType === 'sym2ko') {
+            hintLabel = "기호 ➔ 한글"; displayTxt = target.symbol; answerTxt = target.nameKo; color = "#ffaa00";
+        } else if(qType === 'ko2sym') {
+            hintLabel = "한글 ➔ 기호"; displayTxt = target.nameKo; answerTxt = target.symbol; color = "#00f3ff";
+        } else if(qType === 'num2ko') {
+            hintLabel = "번호 ➔ 한글"; displayTxt = rId + "번"; answerTxt = target.nameKo; color = "#ff66b3";
+        } else if(qType === 'usage2ko') {
+            hintLabel = "용도 ➔ 한글"; 
+            displayTxt = target.info.usage[0] ? target.info.usage[0].text : "데이터 분석 중"; 
+            answerTxt = target.nameKo; color = "#00ff88";
+        }
+
+        const el = document.createElement('div');
+        el.className = 'meteor';
+        
+        // 동적 테두리 및 네온 글로우 발광 효과 적용
+        el.style.border = `1.5px solid ${color}`;
+        el.style.boxShadow = `0 4px 15px rgba(0,0,0,0.6), inset 0 0 12px ${color}50, 0 0 10px ${color}80`;
+        
+        el.innerHTML = `<span class="hint-type">${hintLabel}</span><span class="word" style="color:${color}">${displayTxt}</span>`;
+        document.body.appendChild(el);
+        
+        const startX = 15 + Math.random() * 70; 
+        el.style.left = startX + '%'; 
+        el.style.top = '-80px'; // 캡슐이 약간 커졌으므로 조금 더 높은 곳에서 생성
+        
+        const fallSpeed = 0.3 + (currentLvl * 0.1) + (Math.random() * 0.1);
+        activeMeteors.push({ el: el, answer: answerTxt.toLowerCase(), y: -80, speed: fallSpeed });
+    }
+
+    function gameLoop() {
+        if(!isGameRunning) return;
+        for(let i = activeMeteors.length - 1; i >= 0; i--) {
+            let m = activeMeteors[i];
+            m.y += m.speed;
+            m.el.style.top = m.y + 'px';
+            if(m.y > window.innerHeight - 100) {
+                m.el.remove(); activeMeteors.splice(i, 1); takeDamage();
+            }
+        }
+        if(isGameRunning) requestAnimationFrame(gameLoop);
+    }
+
+    document.getElementById('type-input').addEventListener('input', function(e) {
+        if(!isGameRunning) return;
+        
+        const val = this.value.trim().toLowerCase();
+        let isHit = false;
+
+        for(let i = 0; i < activeMeteors.length; i++) {
+            if(val === activeMeteors[i].answer) {
+                isHit = true;
+                playSound('hit');
+                createExplosion(activeMeteors[i].el.style.left, activeMeteors[i].y);
+                activeMeteors[i].el.remove();
+                activeMeteors.splice(i, 1);
+                score += 10;
+                
+                const inputField = this;
+                inputField.blur();      
+                inputField.value = '';  
+                
+                setTimeout(() => {
+                    inputField.value = ''; 
+                    inputField.focus();    
+                }, 10);
+
+                checkLevelUp(); 
+                updateHUD();
+                if(score >= targetScore) gameOver(true);
+                break;
+            }
+        }
+
+        if (!isHit && val.length > 0) {
+            playSound('type');
+        }
+    });
+
+    document.getElementById('type-input').addEventListener('keydown', function(e) {
+        if(e.key === 'Enter') {
+            e.preventDefault(); 
+            
+            const inputField = this;
+            inputField.blur();
+            inputField.value = ''; 
+            
+            setTimeout(() => {
+                inputField.value = '';
+                inputField.focus();
+            }, 10);
+        }
+    });
+
+    function createExplosion(x, y) {
+        const exp = document.createElement('div');
+        exp.className = 'explosion';
+        exp.innerText = 'BINGO!';
+        exp.style.left = x; exp.style.top = y + 'px';
+        document.body.appendChild(exp);
+        setTimeout(() => exp.remove(), 400);
+    }
+
+    function checkLevelUp() {
+        if (score > 0 && score % 300 === 0 && currentLvl < 5) {
+            currentLvl++;
+            playSound('levelup');
+            showLevelUpMsg();
+            resetSpawnTimer(); 
+        }
+    }
+
+    function showLevelUpMsg() {
+        const msg = document.getElementById('levelup-msg');
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 1500);
+    }
+
+    function takeDamage() {
+        hp--; playSound('damage');
+        document.body.classList.add('shake');
+        setTimeout(() => document.body.classList.remove('shake'), 200);
+        updateHUD();
+        if(hp <= 0) gameOver(false);
+    }
+
+    function updateHUD() {
+        document.getElementById('hp-bar').innerText = 'SHIELD: ' + '❤️'.repeat(hp);
+        document.getElementById('score-bar').innerText = `SCORE: ${score} / ${targetScore}`;
+        document.getElementById('level-indicator').innerText = `LEVEL ${currentLvl}`;
+    }
+
+    function gameOver(isWin) {
+        isGameRunning = false;
+        clearInterval(spawnInterval);
+        bgMusic.pause(); 
+        bgMusic.currentTime = 0;
+
+        document.getElementById('game-ui').style.display = 'none';
+        const menu = document.getElementById('menu-screen');
+        menu.style.display = 'flex';
+        const box = menu.querySelector('.menu-box');
+        if(isWin) {
+            playSound('levelup');
+            box.innerHTML = `<h1 style="color:#00ff88;">MISSION CLEAR!</h1><p>만점 1500점 달성! 우주 최강 타자 마스터!</p><h2>SCORE: ${score}</h2><button class="btn btn-start" onclick="location.reload()">REPLAY</button>`;
+        } else {
+            box.innerHTML = `<h1 style="color:#ff4d4d;">MISSION FAILED</h1><p>실드를 모두 잃었습니다.</p><h2>SCORE: ${score}</h2><button class="btn btn-start" onclick="location.reload()">RETRY</button>`;
+        }
+    }
+</script>
+</body>
+</html>

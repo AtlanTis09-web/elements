@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1100, user-scalable=yes">
+    <title>코스믹 주기율표 마스터</title>
+    <style>
+        :root { --key-side: #0f1218; --bg-dark: #05070a; }
+
+        body { 
+            background-color: var(--bg-dark); 
+            background-image: 
+                linear-gradient(rgba(5, 7, 10, 0.4), rgba(5, 7, 10, 0.7)),
+                url('cosmos.png');
+            background-size: cover;            
+            background-position: center;       
+            background-attachment: fixed;      
+            color: white; 
+            font-family: 'Orbitron', 'Malgun Gothic', sans-serif; 
+            margin: 0; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden; overflow-y: auto; transition: 0.3s;
+        }
+
+        .controls-top {
+            position: fixed; top: 20px; right: 20px; z-index: 3000;
+            display: flex; gap: 15px;
+        }
+
+        .controls-top button {
+            padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold;
+            font-family: 'Orbitron'; cursor: pointer; transition: all 0.1s ease; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .controls-top button:active { transform: translateY(4px); box-shadow: 0 0 0 transparent, 0 2px 5px rgba(0,0,0,0.5) !important; }
+
+        #music-btn { background-color: #2a2e35; color: white; box-shadow: 0 4px 0 #15181c, 0 6px 15px rgba(0,0,0,0.4); }
+        #music-btn.playing { background-color: #00ff88; color: black; box-shadow: 0 4px 0 #00b35f, 0 6px 15px rgba(0,255,136,0.3); text-shadow: none; }
+
+        #quiz-toggle-btn { background-color: #ffaa00; color: black; box-shadow: 0 4px 0 #cc8800, 0 6px 15px rgba(255,170,0,0.3); text-shadow: none; }
+        #quiz-toggle-btn.quit-mode { background-color: #ff4d4d; color: white; box-shadow: 0 4px 0 #cc0000, 0 6px 15px rgba(255,77,77,0.3); }
+
+        /* 모니터 HUD 레이아웃 */
+        .hologram-monitor { 
+            display: none; position: fixed; top: 10%; width: 850px; 
+            background: rgba(10, 15, 25, 0.96); border: 1px solid var(--modal-color, #333); 
+            backdrop-filter: blur(15px); padding: 20px; border-radius: 12px; 
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2); z-index: 2000; 
+        }
+        
+        body.quiz-active .hologram-monitor {
+            position: relative; top: 0 !important; left: 0 !important; 
+            transform: none !important; width: 95%; max-width: 1000px;
+            display: block; margin: 20px 0; padding: 15px;
+        }
+
+        .modal-body { display: flex; gap: 20px; }
+        .viz-side { width: 400px; height: 400px; background: #000; border-radius: 8px; border: 1px solid #333; position: relative; overflow: hidden; }
+        .info-side { flex: 1; }
+
+        /* 주기율표 판 */
+        .keyboard-deck { 
+            display: grid; grid-template-columns: repeat(18, 50px); 
+            grid-template-rows: repeat(7, 55px) 20px repeat(2, 55px); 
+            grid-gap: 8px; padding: 25px; 
+            background: rgba(15, 20, 25, 0.9); border-radius: 15px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            transform-origin: top center; transition: 0.3s;
+        }
+        @media (max-width: 1100px) { .keyboard-deck { transform: scale(0.85); } }
+
+        /* 🌟 코스믹 홀로그램 버튼 스타일 (화려함 MAX) 적용! 🌟 */
+        .key { 
+            position: relative; width: 100%; height: 100%; 
+            background: linear-gradient(135deg, rgba(15,20,25,0.8) 0%, rgba(5,7,10,0.95) 100%); 
+            border: 1.5px solid var(--el-color); 
+            box-shadow: inset 0 0 10px var(--el-color), 0 2px 5px rgba(0,0,0,0.8);
+            cursor: pointer; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center; 
+            border-radius: 8px; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            overflow: hidden; 
+        }
+
+        /* 마우스 오버 시 빛이 스쳐 지나가는 홀로그램 스윕 효과 */
+        .key::before {
+            content: '';
+            position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-25deg);
+            transition: 0.4s ease-in-out;
+        }
+
+        /* 원소 기호 (강력한 네온 발광) */
+        .key b { 
+            font-size: 19px; pointer-events: none; 
+            color: var(--el-color);
+            text-shadow: 0 0 8px var(--el-color), 0 0 15px var(--el-color); 
+            margin-top: -2px;
+        }
+
+        /* 원자 번호 */
+        .key span { 
+            font-size: 10px; opacity: 0.9; pointer-events: none; 
+            color: #ffffff; 
+            text-shadow: 0 0 4px var(--el-color);
+        }
+
+        /* 마우스를 올렸을 때 (Hover) */
+        .key:hover { 
+            transform: scale(1.15); 
+            z-index: 50; 
+            box-shadow: inset 0 0 20px var(--el-color), 0 0 25px var(--el-color); 
+            background: rgba(10, 15, 20, 0.9);
+        }
+
+        .key:hover::before {
+            left: 150%;
+        }
+
+        .key:active { transform: scale(1.05); }
+
+        /* 통계 패널 및 리스트 스타일 */
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px; text-align: center; font-size: 13px;}
+        .usage-list { list-style: none; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0;}
+        .usage-item { background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="elements.mp3" type="audio/mpeg">
+</audio>
+
+<div class="controls-top">
+    <button id="music-btn" onclick="toggleMusic()">🎵 MUSIC: OFF</button>
+    <button id="quiz-toggle-btn" onclick="toggleQuizMode()">[ 🎮 QUIZ MODE ]</button>
+</div>
+
+<div id="monitor" class="hologram-monitor">
+    <div id="monitor-header" style="display:flex; justify-content:space-between; align-items:center; cursor: move; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
+        <h2 id="headerTitle" style="margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #00f3ff;">SYSTEM MONITOR</h2>
+        <span onclick="closeMonitor()" style="cursor:pointer; font-weight:bold; padding: 5px;">[ X ]</span>
+    </div>
+    
+    <div class="modal-body">
+        <div id="vizContainer" class="viz-side">
+            <canvas id="atomCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="info-side">
+            <div id="standardInfo">
+                <div style="display: flex; align-items: baseline; gap: 10px;">
+                    <h1 id="elTitle" style="font-size: 2rem; margin: 0;">-</h1>
+                    <span id="elSymbol" style="font-size: 1.2rem; color: #888;">-</span>
+                </div>
+                <div id="elCat" style="color: #aaa; font-weight: bold; font-size: 14px; margin-bottom: 5px;">-</div>
+                <p id="elDesc" style="line-height: 1.4; color: #ddd; font-size: 13px; margin: 5px 0;"></p>
+                <div class="stat-grid">
+                    <div>양성자<br><b id="statP" style="color: #ff4d4d;">-</b></div>
+                    <div>중성자<br><b id="statN" style="color: #a6a6a6;">-</b></div>
+                    <div>전자<br><b id="statE" style="color: #4da6ff;">-</b></div>
+                </div>
+                <ul id="elUsage" class="usage-list"></ul>
+                <p id="elHistory" style="font-size: 11px; color: #666; font-style: italic;"></p>
+            </div>
+            <div id="quizInfo" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="keyboard-deck" id="deck"></div>
+
+<script src="data.js"></script>
+<script src="quiz.js"></script>
+<script>
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('music-btn');
+    let isMusicPlaying = false;
+
+    function toggleMusic() {
+        if (isMusicPlaying) {
+            bgMusic.pause();
+            musicBtn.innerText = "🎵 MUSIC: OFF"; 
+            musicBtn.classList.remove('playing');
+        } else {
+            bgMusic.play();
+            musicBtn.innerText = "🎵 MUSIC: ON"; 
+            musicBtn.classList.add('playing');
+        }
+        isMusicPlaying = !isMusicPlaying;
+    }
+
+    document.addEventListener('click', () => { if(!isMusicPlaying) toggleMusic(); }, { once: true });
+
+    const colors = { '기타 비금속': '#00ff88', '알칼리 금속': '#ff4d4d', '알칼리 토금속': '#ffaa00', '전이 금속': '#a2c2e1', '전이후 금속': '#4da6ff', '준금속': '#00f3ff', '할로젠': '#00cc99', '비활성 기체': '#b366ff', '란타넘족': '#ff66b3', '악티늄족': '#ff3366', '미상': '#888888' };
+    
+    function getElementPos(i) {
+        let r, c, cat = '미상';
+        if (i >= 57 && i <= 71) { r = 9; c = i - 57 + 4; cat = '란타넘족'; }
+        else if (i >= 89 && i <= 103) { r = 10; c = i - 89 + 4; cat = '악티늄족'; }
+        else {
+            if (i <= 2) { r = 1; c = i === 1 ? 1 : 18; }
+            else if (i <= 10) { r = 2; c = i <= 4 ? i - 2 : i + 8; }
+            else if (i <= 18) { r = 3; c = i <= 12 ? i - 10 : i; }
+            else if (i <= 36) { r = 4; c = i - 18; }
+            else if (i <= 54) { r = 5; c = i - 36; }
+            else if (i <= 86) { r = 6; c = i <= 56 ? i - 54 : i - 71 + 3; }
+            else { r = 7; c = i <= 88 ? i - 86 : i - 103 + 3; }
+            if (i === 1) cat = '기타 비금속'; else if (c === 1) cat = '알칼리 금속'; else if (c === 2) cat = '알칼리 토금속'; else if (c >= 3 && c <= 12) cat = '전이 금속'; else if (c === 17) cat = '할로젠'; else if (c === 18) cat = '비활성 기체'; else { if ([5, 14, 32, 33, 51, 52].includes(i)) cat = '준금속'; else cat = '전이후 금속'; }
+        }
+        return { r, c, cat };
+    }
+
+    const deck = document.getElementById('deck');
+    for (let i = 1; i <= 118; i++) {
+        const pos = getElementPos(i);
+        const key = document.createElement('button');
+        key.className = 'key'; key.setAttribute('data-id', i);
+        key.innerHTML = `<span>${i}</span><b>${elementDB[i] ? elementDB[i].symbol : i}</b>`;
+        key.style.gridRow = pos.r; key.style.gridColumn = pos.c;
+        key.style.setProperty('--el-color', colors[pos.cat]);
+        key.onclick = () => { if (window.quizMode) checkQuizAnswer(i); else openMonitor(i, colors[pos.cat]); };
+        deck.appendChild(key);
+    }
+
+    const canvas = document.getElementById('atomCanvas');
+    const ctx = canvas.getContext('2d');
+    let aniFrame, angle = 0, particles = [];
+
+    function openMonitor(id, color) {
+        document.getElementById('monitor').style.display = 'block';
+        document.getElementById('monitor').style.setProperty('--modal-color', color);
+        
+        const headerTitle = document.getElementById('headerTitle');
+        if(headerTitle) {
+            headerTitle.innerText = "SYSTEM MONITOR";
+            headerTitle.style.color = "#00f3ff";
+        }
+
+        const db = elementDB[id];
+        if (db) {
+            document.getElementById('elTitle').innerText = db.nameKo; document.getElementById('elSymbol').innerText = db.symbol;
+            document.getElementById('elCat').innerText = db.info.category; document.getElementById('elCat').style.color = color;
+            document.getElementById('elDesc').innerText = db.info.description; document.getElementById('statP').innerText = db.structure.protons;
+            document.getElementById('statN').innerText = db.structure.neutrons; document.getElementById('statE').innerText = db.structure.electrons;
+            document.getElementById('elHistory').innerText = db.info.history;
+            const ul = document.getElementById('elUsage'); ul.innerHTML = '';
+            db.info.usage.forEach(u => ul.innerHTML += `<li class="usage-item">${u.icon} ${u.text}</li>`);
+            window.startAtomRender(db.structure.protons, db.structure.neutrons, db.structure.shells, color);
+        }
+    }
+
+    function closeMonitor() { if (window.quizMode) stopQuiz(); else document.getElementById('monitor').style.display = 'none'; cancelAnimationFrame(aniFrame); }
+
+    window.startAtomRender = function(p, n, shells, color) {
+        cancelAnimationFrame(aniFrame); particles = [];
+        for(let i=0; i<p; i++) particles.push({ type:'P', c:'#ff4d4d', x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30 });
+        for(let i=0; i<n; i++) particles.push({ type:'N', c:'#a6a6a6', x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30 });
+        
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(0,0,400,400);
+            const cx = 200, cy = 200;
+            
+            const maxRadius = 165; 
+            const baseRadius = 45; 
+            const gap = shells.length > 1 ? Math.min(30, (maxRadius - baseRadius) / (shells.length - 1)) : 30;
+            
+            shells.forEach((e, idx) => {
+                const r = baseRadius + idx * gap; 
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.stroke();
+                
+                ctx.fillStyle = color; ctx.font = "bold 11px 'Orbitron', sans-serif"; ctx.textAlign = "center";
+                ctx.fillText(e + "e⁻", cx, cy - r - 4); 
+
+                for(let i=0; i<e; i++) {
+                    const a = angle * (1.2-idx*0.1) + (Math.PI*2/e)*i;
+                    ctx.fillStyle = '#fff'; ctx.shadowBlur = 10; ctx.shadowColor = color;
+                    ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r, cy+Math.sin(a)*r, 3.5, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+                }
+            });
+            
+            particles.forEach(pt => {
+                ctx.beginPath(); ctx.arc(cx+pt.x, cy+pt.y, p>20?2.5:4, 0, Math.PI*2); ctx.fillStyle = pt.c; ctx.fill();
+            });
+            
+            angle += 0.02; aniFrame = requestAnimationFrame(draw);
+        }
+        draw();
+    }
+
+    // 모니터 드래그 앤 드롭 기능
+    dragElement(document.getElementById("monitor"));
+
+    function dragElement(elmnt) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        const header = document.getElementById("monitor-header");
+        
+        if (header) { header.onmousedown = dragMouseDown; }
+
+        function dragMouseDown(e) {
+            if (window.quizMode) return; 
+            e = e || window.event; e.preventDefault();
+            pos3 = e.clientX; pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+            header.style.cursor = 'grabbing'; 
+        }
+
+        function elementDrag(e) {
+            e = e || window.event; e.preventDefault();
+            pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
+            pos3 = e.clientX; pos4 = e.clientY;
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            elmnt.style.margin = "0"; elmnt.style.transform = "none"; 
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null; document.onmousemove = null;
+            header.style.cursor = 'move'; 
+        }
+    }
+</script>
+</body>
+</html>
