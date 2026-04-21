@@ -230,10 +230,14 @@ function renderBlackout() {
     document.getElementById('headerTitle').style.color = "#ffffff";
     
     let shuffledPool = [...currentPool].sort(() => Math.random() - 0.5);
+    
+    // 🔽 스마트폰 터치 이벤트(ontouchstart, move, end) 및 touch-action:none 추가 🔽
     let dragItemsHTML = shuffledPool.map(id => {
         const el = elementDB[id];
-        return `<div class="drag-item" draggable="true" data-id="${id}" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" 
-        style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; margin:4px; background:linear-gradient(135deg, rgba(0,243,255,0.2), rgba(0,0,0,0.8)); border:2px solid #00f3ff; border-radius:8px; cursor:grab; font-family:'Orbitron'; font-weight:bold; color:#fff; font-size:18px; transition:0.2s;">
+        return `<div class="drag-item" draggable="true" data-id="${id}" 
+        ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" 
+        ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event)"
+        style="touch-action: none; display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; margin:4px; background:linear-gradient(135deg, rgba(0,243,255,0.2), rgba(0,0,0,0.8)); border:2px solid #00f3ff; border-radius:8px; cursor:grab; font-family:'Orbitron'; font-weight:bold; color:#fff; font-size:18px; transition:0.2s;">
             ${el.symbol}
         </div>`;
     }).join('');
@@ -255,6 +259,7 @@ function renderBlackout() {
     `; 
 }
 
+// --- PC 마우스용 드래그 이벤트 ---
 window.handleDragStart = function(e) {
     e.dataTransfer.setData("text/plain", e.target.getAttribute('data-id'));
     e.target.style.opacity = '0.4';
@@ -266,6 +271,61 @@ window.handleDragEnd = function(e) {
     e.target.style.transform = 'scale(1)';
 };
 
+// --- 📱 스마트폰/태블릿용 터치 이벤트 추가 ---
+window.handleTouchStart = function(e) {
+    const target = e.currentTarget;
+    const touch = e.touches[0];
+    
+    // 손가락에 따라다니도록 위치를 화면 기준으로 변경
+    target.style.position = 'fixed';
+    target.style.zIndex = '9999';
+    target.style.opacity = '0.8';
+    target.style.transform = 'scale(1.1)';
+    target.style.left = (touch.clientX - target.offsetWidth / 2) + 'px';
+    target.style.top = (touch.clientY - target.offsetHeight / 2) + 'px';
+    
+    document.body.style.overflow = 'hidden'; // 화면 전체가 스크롤되는 것 방지
+};
+
+window.handleTouchMove = function(e) {
+    const target = e.currentTarget;
+    const touch = e.touches[0];
+    // 손가락이 움직이는 대로 좌표 업데이트
+    target.style.left = (touch.clientX - target.offsetWidth / 2) + 'px';
+    target.style.top = (touch.clientY - target.offsetHeight / 2) + 'px';
+};
+
+window.handleTouchEnd = function(e) {
+    const target = e.currentTarget;
+    document.body.style.overflow = ''; // 스크롤 잠금 해제
+    
+    const touch = e.changedTouches[0];
+    target.style.visibility = 'hidden'; // 손가락 아래에 뭐가 있는지 확인하기 위해 잠시 투명화
+    const elemUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+    target.style.visibility = 'visible';
+
+    // 손가락 아래에 있는 요소가 빈칸(key)인지 확인
+    const dropTarget = elemUnderFinger ? elemUnderFinger.closest('.key') : null;
+    const targetId = dropTarget ? dropTarget.getAttribute('data-id') : null;
+
+    if (targetId && blackoutActiveIds.includes(String(targetId))) {
+        // 제대로 된 빈칸에 놓았다면 기존 Drop 로직 실행
+        window.handleDrop({
+            preventDefault: () => {},
+            dataTransfer: { getData: () => target.getAttribute('data-id') }
+        }, targetId);
+    } else {
+        // 엉뚱한 곳에 놓았다면 제자리로 원상복구
+        target.style.position = '';
+        target.style.left = '';
+        target.style.top = '';
+        target.style.zIndex = '';
+        target.style.opacity = '1';
+        target.style.transform = 'scale(1)';
+    }
+};
+
+// --- 공통 드롭 판정 ---
 window.handleDrop = function(e, targetId) {
     e.preventDefault();
     const k = document.querySelector(`.key[data-id="${targetId}"]`);
