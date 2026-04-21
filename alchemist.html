@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>COSMIC ALCHEMIST</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        :root { --neon-cyan: #00f3ff; --neon-red: #ff4d4d; --neon-green: #00ff88; --neon-purple: #b366ff; }
+
+        body {
+            margin: 0; padding: 0; background-color: #05070a;
+            background-image: linear-gradient(rgba(5, 7, 10, 0.8), rgba(5, 7, 10, 0.95)), url('cosmos.png');
+            background-size: cover; background-position: center;
+            color: white; font-family: 'Orbitron', 'Malgun Gothic', sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            height: 100vh; overflow: hidden;
+        }
+
+        #menu-overlay {
+            position: fixed; inset: 0; background: rgba(5, 7, 10, 0.96);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; transition: 0.5s;
+        }
+        .menu-title { font-size: 40px; color: var(--neon-purple); letter-spacing: 8px; margin-bottom: 30px; text-shadow: 0 0 20px var(--neon-purple); text-align:center; }
+        .diff-btn {
+            width: 320px; padding: 18px; margin: 10px; border: 1px solid var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.1); color: white; font-family: 'Orbitron';
+            font-size: 18px; cursor: pointer; transition: 0.3s; border-radius: 8px;
+        }
+        .diff-btn:hover { background: var(--neon-cyan); color: black; box-shadow: 0 0 20px var(--neon-cyan); }
+        .diff-info { font-size: 12px; display: block; margin-top: 5px; opacity: 0.8; font-family: 'Malgun Gothic'; }
+
+        /* BGM 컨트롤 버튼 */
+        .audio-ctrl { position: fixed; top: 20px; right: 20px; z-index: 200; }
+        #music-btn { padding: 10px 20px; background: rgba(255,255,255,0.1); border: 1px solid var(--neon-cyan); color: white; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; transition: 0.3s; }
+        #music-btn:hover { background: var(--neon-cyan); color: #000; }
+
+        /* 미션 모니터 패널 (점수 및 생명 추가) */
+        .mission-panel {
+            margin-top: 40px; width: 85%; max-width: 650px; padding: 20px 25px;
+            background: linear-gradient(180deg, rgba(0, 243, 255, 0.15) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border: 2px solid var(--neon-cyan); border-radius: 12px; text-align: center; 
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            position: relative; overflow: hidden; z-index: 10;
+        }
+        .mission-panel::after {
+            content: ''; position: absolute; top: -50%; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 243, 255, 0.25), transparent);
+            animation: scan 3s linear infinite; pointer-events: none;
+        }
+        @keyframes scan { 0% { top: -50%; } 100% { top: 100%; } }
+
+        /* 🔽 상단 점수 및 생명력 바 🔽 */
+        .status-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3); padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .status-score { font-size: 20px; color: var(--neon-green); font-family: 'Orbitron'; font-weight: bold; text-shadow: 0 0 10px var(--neon-green);}
+        .status-lives { font-size: 20px; letter-spacing: 2px; }
+
+        .mission-title { font-size: 16px; color: #fff; text-shadow: 0 0 10px var(--neon-cyan); letter-spacing: 5px; margin-bottom: 10px; display: inline-block; font-weight: bold;}
+        .mission-desc { font-size: 22px; color: var(--neon-cyan); font-weight: bold; line-height: 1.5; min-height: 60px; text-shadow: 0 0 8px var(--neon-cyan); }
+        .mission-desc span.usage { font-size: 15px; color: #ffcc00; font-weight: normal; display: block; margin-top: 8px; text-shadow: none; font-family: 'Malgun Gothic'; }
+
+        /* 합성 반응로 (Reactor) */
+        .reactor-container { position: relative; width: 320px; height: 320px; margin: 15px 0; display: flex; justify-content: center; align-items: center; z-index: 10; }
+        .reactor-base { position: absolute; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, rgba(0,243,255,0.1) 0%, rgba(0,0,0,0.8) 80%); border: 4px solid #222; border-top-color: #555; border-bottom-color: #555; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,243,255,0.1); }
+        .reactor-core { position: absolute; width: 160px; height: 160px; border-radius: 50%; border: 2px dashed var(--neon-cyan); box-shadow: 0 0 30px rgba(0,243,255,0.4), inset 0 0 20px rgba(0,243,255,0.2); animation: spin 15s linear infinite; }
+        .reactor-ring { position: absolute; width: 220px; height: 220px; border-radius: 50%; border: 1px dotted rgba(0, 243, 255, 0.5); animation: spin-reverse 20s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+
+        /* 반응로 슬롯 */
+        .slot-container { position: absolute; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 80%; }
+        .slot-item { width: 40px; height: 40px; background: rgba(0,0,0,0.6); border: 1.5px solid var(--el-color, var(--neon-cyan)); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 18px; color: var(--el-color, #fff); text-shadow: 0 0 8px var(--el-color, #fff); box-shadow: 0 0 15px rgba(0,0,0,0.8), inset 0 0 10px var(--el-color, var(--neon-cyan)); cursor: pointer; transition: 0.2s; }
+        .slot-item:hover { background: rgba(255,77,77,0.3); border-color: var(--neon-red); color: white; }
+
+        /* 컨트롤 버튼 */
+        .control-panel { display: flex; gap: 20px; z-index: 10; }
+        .action-btn { padding: 15px 40px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: bold; font-size: 20px; cursor: pointer; transition: 0.3s; color: black; letter-spacing: 2px; }
+        .btn-synth { background: var(--neon-green); box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+        .btn-synth:hover { box-shadow: 0 0 40px rgba(0,255,136,0.8); transform: scale(1.05); }
+        .btn-clear { background: var(--neon-red); box-shadow: 0 0 20px rgba(255,77,77,0.4); color: white; }
+
+        /* 재료 인벤토리 */
+        .inventory { margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 800px; z-index: 10; }
+        .inv-element { width: 55px; height: 55px; background: rgba(0,0,0,0.7); border: 1.5px solid var(--el-color, #555); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.5), inset 0 0 8px var(--el-color, transparent); }
+        .inv-element:hover { transform: translateY(-5px); box-shadow: 0 0 15px var(--el-color, #fff), inset 0 0 15px var(--el-color, transparent); }
+        .inv-sym { font-size: 24px; font-weight: bold; color: var(--el-color, #fff); text-shadow: 0 0 8px var(--el-color, #fff); margin-bottom: -2px;}
+        .inv-name { font-size: 10px; color: #ccc; }
+
+        /* 게임 팁 박스 */
+        .tip-box {
+            margin-top: 15px; padding: 15px 25px; max-width: 650px;
+            background: rgba(0, 0, 0, 0.6); border-left: 4px solid var(--neon-cyan);
+            border-radius: 4px; color: #ddd; font-size: 13px; line-height: 1.6; text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 10;
+        }
+        .tip-title { color: var(--neon-cyan); font-weight: bold; font-family: 'Orbitron'; margin-right: 10px; font-size: 14px;}
+        .tip-box b { color: #ffaa00; font-weight: normal; }
+
+        #fxCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
+
+        /* 정답 표시 홀로그램 */
+        #result-hologram {
+            position: absolute; text-align: center;
+            opacity: 0; pointer-events: none; transform: scale(0.5); transition: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 100; background: rgba(0, 255, 136, 0.15); border: 2px solid var(--neon-green);
+            padding: 20px 40px; border-radius: 15px; box-shadow: 0 0 40px rgba(0, 255, 136, 0.5), inset 0 0 20px rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        .result-formula { font-size: 55px; font-weight: bold; color: #fff; text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); font-family: 'Orbitron'; line-height: 1; }
+        .result-name { font-size: 24px; font-weight: bold; color: #ffeb3b; margin-top: 10px; text-shadow: 0 0 15px #ffaa00; font-family: 'Malgun Gothic'; letter-spacing: 2px; }
+
+        /* 🔽 게임 오버 / 클리어 패널 🔽 */
+        #game-result {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+            flex-direction: column; align-items: center; justify-content: center; z-index: 2000;
+        }
+        #res-title { font-size: 50px; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 10px; letter-spacing: 5px; }
+        #res-score { font-size: 28px; color: #fff; font-family: 'Orbitron'; margin-bottom: 30px; }
+
+        .back-btn { position: fixed; top: 20px; left: 20px; color: var(--neon-cyan); background: transparent; border: 1px solid var(--neon-cyan); padding: 10px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; z-index: 200; transition: 0.3s;}
+        .back-btn:hover { background: var(--neon-cyan); color: #000; }
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="elements.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="fxCanvas"></canvas>
+
+<button class="back-btn" onclick="location.href='index.html'">◀ SYSTEM MONITOR</button>
+<div class="audio-ctrl">
+    <button id="music-btn" onclick="toggleMusic()">🎵 MUSIC: OFF</button>
+</div>
+
+<div id="menu-overlay">
+    <div class="menu-title">⚗️ COSMIC ALCHEMIST</div>
+    <button class="diff-btn" onclick="startGame('easy')">EASY<span class="diff-info">화학식을 그대로 알려줍니다 (H₂O)</span></button>
+    <button class="diff-btn" onclick="startGame('hard')">HARD<span class="diff-info">이름과 용도만 알려줍니다 (물)</span></button>
+    <button class="diff-btn" onclick="startGame('master')">MASTER<span class="diff-info">용도(힌트)만 보고 추리해야 합니다!</span></button>
+</div>
+
+<div id="game-result">
+    <div id="res-title">MISSION CLEAR</div>
+    <div id="res-score">FINAL SCORE: 300</div>
+    <button class="diff-btn" onclick="location.reload()">RETRY MISSION</button>
+</div>
+
+<div class="mission-panel">
+    <div class="status-bar">
+        <div class="status-score">SCORE: <span id="game-score">0</span> / 300</div>
+        <div class="status-lives" id="game-lives">❤️❤️❤️❤️❤️</div>
+    </div>
+    <div class="mission-title">MISSION LOG</div>
+    <div class="mission-desc" id="mission-text">데이터 동기화 중...</div>
+</div>
+
+<div class="reactor-container" id="reactor-area">
+    <div class="reactor-ring"></div>
+    <div class="reactor-base"></div>
+    <div class="reactor-core" id="reactor-core"></div>
+    <div class="slot-container" id="slots"></div>
+    
+    <div id="result-hologram">
+        <div class="result-formula" id="rh-formula">H₂O</div>
+        <div class="result-name" id="rh-name">물</div>
+    </div>
+</div>
+
+<div class="control-panel">
+    <button class="action-btn btn-clear" onclick="clearReactor()">[ FLUSH ]</button>
+    <button class="action-btn btn-synth" onclick="synthesize()">⚡ FUSION ⚡</button>
+</div>
+
+<div class="inventory" id="inventory"></div>
+
+<div class="tip-box">
+    <span class="tip-title">💡 ALCHEMIST TIP</span><br>
+    화학식 앞의 접두사(<b>cis-, trans-, iso-, n-, D-, L-</b> 등)와 대괄호 <b>[ ]</b>는 <b>계산 시 무시해도 됩니다.</b><br>
+    오직 <span style="color:var(--neon-cyan)">원소 기호(대문자)</span>와 <span style="color:var(--neon-green)">숫자</span>만 보고 솥에 알맞은 개수를 넣으세요! (괄호 안의 원소는 바깥 숫자를 곱합니다)
+</div>
+
+<script src="data.js"></script>
+<script>
+    const bgMusic = document.getElementById('bgMusic');
+    function toggleMusic() {
+        if (bgMusic.paused) { bgMusic.play(); document.getElementById('music-btn').innerText = "🎵 MUSIC: ON"; }
+        else { bgMusic.pause(); document.getElementById('music-btn').innerText = "🎵 MUSIC: OFF"; }
+    }
+
+    const AudioFX = {
+        ctx: null,
+        init() { if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+        play(freq, dur, type='sine') {
+            this.init(); const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + dur);
+            osc.connect(gain); gain.connect(this.ctx.destination);
+            osc.start(); osc.stop(this.ctx.currentTime + dur);
+        },
+        add() { this.play(800, 0.1, 'sine'); },
+        remove() { this.play(300, 0.1, 'triangle'); },
+        error() { this.play(150, 0.4, 'sawtooth'); },
+        charge() { this.play(400, 1.0, 'sine'); },
+        success() { this.play(1200, 0.5, 'square'); setTimeout(()=>this.play(1600, 0.5, 'square'), 100); },
+        gameover() { this.play(200, 0.8, 'sawtooth'); setTimeout(()=>this.play(150, 1.0, 'sawtooth'), 300); }
+    };
+
+    const categoryColors = { 
+        '기타 비금속': '#00ff88', '알칼리 금속': '#ff4d4d', '알칼리 토금속': '#ffaa00', 
+        '전이 금속': '#a2c2e1', '전이후 금속': '#4da6ff', '준금속': '#00f3ff', 
+        '할로젠': '#00cc99', '비활성 기체': '#b366ff', '란타넘족': '#ff66b3', '악티늄족': '#ff3366', '미상': '#888888' 
+    };
+
+    let compoundsDB = [];
+    if (typeof elementDB !== 'undefined') {
+        for (let key in elementDB) {
+            if (elementDB[key].compounds) {
+                elementDB[key].compounds.forEach(c => compoundsDB.push(c));
+            }
+        }
+    }
+
+    function parseFormula(formula) {
+        const subMap = {'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
+        let normalized = '';
+        for (let char of formula) { normalized += subMap[char] !== undefined ? subMap[char] : char; }
+
+        function parsePart(part) {
+            let multiplier = 1;
+            let match = part.match(/^([0-9]+)(.*)/);
+            if (match) { multiplier = parseInt(match[1]); part = match[2]; }
+
+            let stack = [[]]; 
+            let i = 0;
+            while (i < part.length) {
+                let char = part[i];
+                if (char === '(' || char === '[') {
+                    stack.push([]); i++;
+                } else if (char === ')' || char === ']') {
+                    let group = stack.pop(); i++;
+                    let countStr = '';
+                    while (i < part.length && /[0-9]/.test(part[i])) { countStr += part[i]; i++; }
+                    let count = countStr ? parseInt(countStr) : 1;
+                    for (let el of group) { for (let k = 0; k < count; k++) stack[stack.length - 1].push(el); }
+                } else if (/[A-Z]/.test(char)) {
+                    let el = char; i++;
+                    while (i < part.length && /[a-z]/.test(part[i])) { el += part[i]; i++; }
+                    let countStr = '';
+                    while (i < part.length && /[0-9]/.test(part[i])) { countStr += part[i]; i++; }
+                    let count = countStr ? parseInt(countStr) : 1;
+                    for (let k = 0; k < count; k++) stack[stack.length - 1].push(el);
+                } else {
+                    i++; 
+                }
+            }
+            
+            let result = [];
+            for(let i=0; i<multiplier; i++) result = result.concat(stack[0]);
+            return result;
+        }
+
+        let parts = normalized.split('·');
+        let finalResult = [];
+        for (let part of parts) finalResult = finalResult.concat(parsePart(part));
+        return finalResult.sort();
+    }
+
+    // 🔽 게임 점수 및 생명 변수 🔽
+    let currentMode = 'easy';
+    let currentMission = null;
+    let reactorItems = []; 
+    let currentScore = 0;
+    let currentLives = 5;
+    const WIN_SCORE = 300;
+
+    function startGame(mode) {
+        AudioFX.init();
+        if (bgMusic.paused) { bgMusic.play(); document.getElementById('music-btn').innerText = "🎵 MUSIC: ON"; }
+
+        currentMode = mode;
+        currentScore = 0;
+        currentLives = 5;
+        updateStatusUI();
+
+        document.getElementById('menu-overlay').style.opacity = '0';
+        setTimeout(() => { document.getElementById('menu-overlay').style.display = 'none'; }, 500);
+        nextMission();
+    }
+
+    // 상태 UI 업데이트 함수
+    function updateStatusUI() {
+        document.getElementById('game-score').innerText = currentScore;
+        let hearts = '';
+        for(let i=0; i<5; i++) { hearts += i < currentLives ? '❤️' : '🖤'; }
+        document.getElementById('game-lives').innerText = hearts;
+    }
+
+    // 승리/패배 모달 띄우기
+    function showGameResult(isWin) {
+        const overlay = document.getElementById('game-result');
+        const title = document.getElementById('res-title');
+        
+        if (isWin) {
+            title.innerText = "MISSION CLEAR!";
+            title.style.color = "var(--neon-green)";
+            title.style.textShadow = "0 0 20px var(--neon-green)";
+            AudioFX.success();
+            setTimeout(()=>AudioFX.success(), 400); // 팡파레 느낌
+        } else {
+            title.innerText = "SYSTEM CRITICAL";
+            title.style.color = "var(--neon-red)";
+            title.style.textShadow = "0 0 20px var(--neon-red)";
+            AudioFX.gameover();
+        }
+        document.getElementById('res-score').innerText = "FINAL SCORE: " + currentScore;
+        overlay.style.display = 'flex';
+    }
+
+    function generateInventory() {
+        const requiredSyms = [...new Set(parseFormula(currentMission.formula))];
+        const allElements = Object.values(elementDB);
+        const allSyms = allElements.map(e => e.symbol);
+        
+        let distractors = [];
+        while(distractors.length < 6) {
+            let randomSym = allSyms[Math.floor(Math.random() * allSyms.length)];
+            if (!requiredSyms.includes(randomSym) && !distractors.includes(randomSym)) { distractors.push(randomSym); }
+        }
+        
+        let finalSyms = [...requiredSyms, ...distractors].sort(() => Math.random() - 0.5);
+
+        const inv = document.getElementById('inventory');
+        inv.innerHTML = '';
+        finalSyms.forEach(sym => {
+            const elData = allElements.find(e => e.symbol === sym);
+            const color = elData ? categoryColors[elData.info.category] : '#fff';
+            
+            const div = document.createElement('div');
+            div.className = 'inv-element';
+            div.style.setProperty('--el-color', color);
+            div.innerHTML = `<div class="inv-sym">${sym}</div><div class="inv-name">${elData ? elData.nameKo : ''}</div>`;
+            div.onclick = () => {
+                AudioFX.add();
+                reactorItems.push({ sym: sym, color: color });
+                renderReactor();
+            };
+            inv.appendChild(div);
+        });
+    }
+
+    function renderReactor() {
+        const slots = document.getElementById('slots');
+        slots.innerHTML = '';
+        reactorItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'slot-item';
+            div.style.setProperty('--el-color', item.color);
+            div.innerText = item.sym;
+            div.onclick = () => { 
+                AudioFX.remove();
+                reactorItems.splice(index, 1);
+                renderReactor();
+            };
+            slots.appendChild(div);
+        });
+    }
+
+    function clearReactor() {
+        AudioFX.remove();
+        reactorItems = [];
+        renderReactor();
+    }
+
+    function nextMission() {
+        clearReactor();
+        document.getElementById('result-hologram').style.opacity = '0';
+        document.getElementById('result-hologram').style.transform = 'scale(0.5)';
+        
+        currentMission = compoundsDB[Math.floor(Math.random() * compoundsDB.length)];
+        
+        const txtBox = document.getElementById('mission-text');
+        if(currentMode === 'easy') {
+            txtBox.innerHTML = `목표: <span style="color:#fff; font-size:28px;">${currentMission.formula}</span><br><span class="usage">(${currentMission.usage})</span>`;
+        } else if(currentMode === 'hard') {
+            txtBox.innerHTML = `목표: <span style="color:#fff; font-size:26px;">${currentMission.name}</span><br><span class="usage">(${currentMission.usage})</span>`;
+        } else {
+            txtBox.innerHTML = `<span style="color:#ffaa00; font-size:20px;">[ BLIND INFERENCE ]</span><br><span style="font-size:18px; color:#fff; display:block; margin-top:10px;">"${currentMission.usage}"</span>`;
+        }
+        generateInventory();
+    }
+
+    const cvs = document.getElementById('fxCanvas');
+    const ctx = cvs.getContext('2d');
+    let particles = [];
+    
+    function resizeCanvas() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    function drawParticles() {
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        for(let i=particles.length-1; i>=0; i--) {
+            let p = particles[i];
+            p.x += p.vx; p.y += p.vy;
+            p.life -= p.decay;
+            if(p.life <= 0) { particles.splice(i, 1); continue; }
+            
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(${p.color}, ${p.life})`;
+            ctx.shadowBlur = 15; ctx.shadowColor = `rgba(${p.color}, 1)`;
+            ctx.fill();
+        }
+        requestAnimationFrame(drawParticles);
+    }
+    requestAnimationFrame(drawParticles);
+
+    function createExplosion(x, y, success) {
+        const color = success ? '0, 255, 136' : '255, 77, 77';
+        const count = success ? 100 : 50;
+        for(let i=0; i<count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 8 + 2;
+            particles.push({
+                x: x, y: y,
+                vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                size: Math.random() * 4 + 2,
+                color: color,
+                life: 1.0, decay: Math.random() * 0.02 + 0.01
+            });
+        }
+    }
+
+    async function synthesize() {
+        if(reactorItems.length === 0) return;
+        
+        const slotsDiv = document.getElementById('slots');
+        slotsDiv.style.opacity = '0';
+        
+        const targetArray = parseFormula(currentMission.formula);
+        const inputSyms = reactorItems.map(item => item.sym);
+        const sortedInput = inputSyms.sort();
+        const isSuccess = JSON.stringify(targetArray) === JSON.stringify(sortedInput);
+
+        AudioFX.charge();
+
+        const reactorRect = document.getElementById('reactor-core').getBoundingClientRect();
+        const centerX = reactorRect.left + reactorRect.width / 2;
+        const centerY = reactorRect.top + reactorRect.height / 2;
+
+        let swirlAtoms = [];
+        const radiusStart = 120;
+        reactorItems.forEach((item, index) => {
+            swirlAtoms.push({
+                sym: item.sym,
+                colorRGB: item.color === '#fff' ? '255,255,255' : hexToRgb(item.color),
+                angle: (Math.PI * 2 / reactorItems.length) * index,
+                radius: radiusStart
+            });
+        });
+
+        function hexToRgb(hex) {
+            let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `${r}, ${g}, ${b}`;
+        }
+
+        return new Promise(resolve => {
+            let frame = 0;
+            function animateSwirl() {
+                frame++;
+                swirlAtoms.forEach(atom => {
+                    atom.angle += 0.15; 
+                    atom.radius -= 2;   
+                    
+                    const ax = centerX + Math.cos(atom.angle) * atom.radius;
+                    const ay = centerY + Math.sin(atom.angle) * atom.radius;
+
+                    particles.push({
+                        x: ax, y: ay, vx: 0, vy: 0, size: 3.5, color: atom.colorRGB,
+                        life: 0.8, decay: 0.05
+                    });
+                });
+
+                if(swirlAtoms[0].radius > 0) {
+                    requestAnimationFrame(animateSwirl);
+                } else {
+                    if(isSuccess) {
+                        AudioFX.success();
+                        createExplosion(centerX, centerY, true);
+                        
+                        document.getElementById('rh-formula').innerText = currentMission.formula;
+                        document.getElementById('rh-name').innerText = currentMission.name;
+                        
+                        const holo = document.getElementById('result-hologram');
+                        holo.style.opacity = '1';
+                        holo.style.transform = 'scale(1)';
+
+                        // 🔽 성공 시 점수 10점 추가 및 클리어 체크 🔽
+                        currentScore += 10;
+                        updateStatusUI();
+                        
+                        setTimeout(() => { 
+                            if(currentScore >= WIN_SCORE) {
+                                showGameResult(true); // 300점 달성 시 승리 화면
+                            } else {
+                                nextMission(); 
+                                slotsDiv.style.opacity = '1'; 
+                            }
+                        }, 2200);
+
+                    } else {
+                        AudioFX.error();
+                        createExplosion(centerX, centerY, false);
+                        
+                        document.body.style.transform = 'translate(10px, 10px)';
+                        setTimeout(()=> document.body.style.transform = 'translate(-10px, -10px)', 50);
+                        setTimeout(()=> document.body.style.transform = 'translate(0, 0)', 100);
+                        
+                        // 🔽 실패 시 생명 1개 차감 및 게임오버 체크 🔽
+                        currentLives -= 1;
+                        updateStatusUI();
+
+                        setTimeout(() => { 
+                            if(currentLives <= 0) {
+                                showGameResult(false); // 생명 0개 시 패배 화면
+                            } else {
+                                clearReactor(); 
+                                slotsDiv.style.opacity = '1'; 
+                            }
+                        }, 500);
+                    }
+                    resolve();
+                }
+            }
+            animateSwirl();
+        });
+    }
+</script>
+</body>
+</html>

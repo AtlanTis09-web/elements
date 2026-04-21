@@ -22,6 +22,35 @@
             overflow-x: hidden; overflow-y: auto; transition: 0.3s;
         }
 
+        /* 🔽 상단 타이틀 섹션 스타일 🔽 */
+        header {
+            text-align: center;
+            margin: 50px 0 30px 0;
+            z-index: 10;
+        }
+        header h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            letter-spacing: 12px;
+            font-weight: 900;
+            color: #00f3ff;
+            text-shadow: 
+                0 0 10px rgba(0, 243, 255, 0.5),
+                0 0 20px rgba(0, 243, 255, 0.3),
+                0 0 40px rgba(0, 243, 255, 0.2);
+            text-transform: uppercase;
+        }
+        header .subtitle {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #aaa;
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(90deg, transparent, #444, transparent);
+            padding: 5px 50px;
+        }
+        /* 🔼 여기까지 🔼 */
+
         .controls-top {
             position: fixed; top: 20px; right: 20px; z-index: 3000;
             display: flex; gap: 15px;
@@ -41,7 +70,6 @@
         #quiz-toggle-btn { background-color: #ffaa00; color: black; box-shadow: 0 4px 0 #cc8800, 0 6px 15px rgba(255,170,0,0.3); text-shadow: none; }
         #quiz-toggle-btn.quit-mode { background-color: #ff4d4d; color: white; box-shadow: 0 4px 0 #cc0000, 0 6px 15px rgba(255,77,77,0.3); }
 
-        /* 모니터 HUD 레이아웃 */
         .hologram-monitor { 
             display: none; position: fixed; top: 10%; width: 850px; 
             background: rgba(10, 15, 25, 0.96); border: 1px solid var(--modal-color, #333); 
@@ -57,9 +85,8 @@
 
         .modal-body { display: flex; gap: 20px; }
         .viz-side { width: 400px; height: 400px; background: #000; border-radius: 8px; border: 1px solid #333; position: relative; overflow: hidden; }
-        .info-side { flex: 1; }
+        .info-side { flex: 1; display: flex; flex-direction: column; }
 
-        /* 주기율표 판 */
         .keyboard-deck { 
             display: grid; grid-template-columns: repeat(18, 50px); 
             grid-template-rows: repeat(7, 55px) 20px repeat(2, 55px); 
@@ -67,10 +94,10 @@
             background: rgba(15, 20, 25, 0.9); border-radius: 15px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             transform-origin: top center; transition: 0.3s;
+            margin-top: 10px;
         }
         @media (max-width: 1100px) { .keyboard-deck { transform: scale(0.85); } }
 
-        /* 🌟 코스믹 홀로그램 버튼 스타일 (화려함 MAX) 적용! 🌟 */
         .key { 
             position: relative; width: 100%; height: 100%; 
             background: linear-gradient(135deg, rgba(15,20,25,0.8) 0%, rgba(5,7,10,0.95) 100%); 
@@ -83,7 +110,6 @@
             overflow: hidden; 
         }
 
-        /* 마우스 오버 시 빛이 스쳐 지나가는 홀로그램 스윕 효과 */
         .key::before {
             content: '';
             position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
@@ -92,7 +118,6 @@
             transition: 0.4s ease-in-out;
         }
 
-        /* 원소 기호 (강력한 네온 발광) */
         .key b { 
             font-size: 19px; pointer-events: none; 
             color: var(--el-color);
@@ -100,14 +125,12 @@
             margin-top: -2px;
         }
 
-        /* 원자 번호 */
         .key span { 
             font-size: 10px; opacity: 0.9; pointer-events: none; 
             color: #ffffff; 
             text-shadow: 0 0 4px var(--el-color);
         }
 
-        /* 마우스를 올렸을 때 (Hover) */
         .key:hover { 
             transform: scale(1.15); 
             z-index: 50; 
@@ -115,16 +138,43 @@
             background: rgba(10, 15, 20, 0.9);
         }
 
-        .key:hover::before {
-            left: 150%;
-        }
-
+        .key:hover::before { left: 150%; }
         .key:active { transform: scale(1.05); }
 
-        /* 통계 패널 및 리스트 스타일 */
         .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 5px; text-align: center; font-size: 13px;}
         .usage-list { list-style: none; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0;}
         .usage-item { background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 10px; font-size: 11px; }
+
+        .rule-btn {
+            padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,243,255,0.3);
+            color: #00f3ff; border-radius: 6px; cursor: pointer; font-family: 'Malgun Gothic', sans-serif;
+            font-size: 13px; font-weight: bold; transition: all 0.3s ease;
+        }
+        .rule-btn:hover { background: rgba(0,243,255,0.15); }
+        .rule-btn.active { background: #00f3ff; color: #000; box-shadow: 0 0 15px rgba(0,243,255,0.5); }
+
+        .key.dimmed { opacity: 0.15; filter: grayscale(100%); pointer-events: none; }
+        .key.highlight { 
+            opacity: 1; filter: grayscale(0%); 
+            transform: scale(1.15) translateZ(20px); 
+            box-shadow: 0 0 25px var(--el-color), inset 0 0 15px var(--el-color); 
+            border: 2px solid #fff; z-index: 100;
+        }
+
+        .cat-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 6px 12px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+            cursor: pointer; font-size: 12px; color: #ccc; transition: all 0.2s ease;
+        }
+        .cat-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+        .cat-btn.active { background: rgba(255,255,255,0.15); color: #fff; border-color: #fff; }
+        .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+        #compoundsSection { margin-top: 10px; margin-bottom: auto; }
+        #elCompounds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        #elCompounds > div { transition: transform 0.2s, background 0.2s; cursor: default; }
+        #elCompounds > div:hover { background: rgba(255, 255, 255, 0.1) !important; transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -138,6 +188,10 @@
     <button id="quiz-toggle-btn" onclick="toggleQuizMode()">[ 🎮 QUIZ MODE ]</button>
 </div>
 
+<header>
+    <h1>Cosmic Elements</h1>
+    <div class="subtitle">우주를 구성하는 118개의 마스터 설계도</div>
+</header>
 <div id="monitor" class="hologram-monitor">
     <div id="monitor-header" style="display:flex; justify-content:space-between; align-items:center; cursor: move; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px;">
         <h2 id="headerTitle" style="margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #00f3ff;">SYSTEM MONITOR</h2>
@@ -149,7 +203,7 @@
             <canvas id="atomCanvas" width="400" height="400"></canvas>
         </div>
         <div class="info-side">
-            <div id="standardInfo">
+            <div id="standardInfo" style="display: flex; flex-direction: column; height: 100%;">
                 <div style="display: flex; align-items: baseline; gap: 10px;">
                     <h1 id="elTitle" style="font-size: 2rem; margin: 0;">-</h1>
                     <span id="elSymbol" style="font-size: 1.2rem; color: #888;">-</span>
@@ -162,7 +216,11 @@
                     <div>전자<br><b id="statE" style="color: #4da6ff;">-</b></div>
                 </div>
                 <ul id="elUsage" class="usage-list"></ul>
-                <p id="elHistory" style="font-size: 11px; color: #666; font-style: italic;"></p>
+                <div id="compoundsSection" style="display: none;">
+                    <h3 style="font-size: 13px; color: #888; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; font-family: 'Orbitron';">MAIN COMPOUNDS</h3>
+                    <div id="elCompounds"></div>
+                </div>
+                <p id="elHistory" style="font-size: 11px; color: #666; font-style: italic; margin-top: 15px; margin-bottom: 0;"></p>
             </div>
             <div id="quizInfo" style="display:none;"></div>
         </div>
@@ -170,6 +228,24 @@
 </div>
 
 <div class="keyboard-deck" id="deck"></div>
+
+<div id="category-legend" style="max-width: 900px; margin: 30px auto 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;"></div>
+
+<div id="rule-explorer" style="width: 100%; max-width: 900px; margin: 10px auto 50px; text-align: center; z-index: 10;">
+    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px;">
+        <button class="rule-btn active" onclick="applyRule('reset')">전체 보기</button>
+        <button class="rule-btn" onclick="applyRule('metal_only')">금속</button>
+        <button class="rule-btn" onclick="applyRule('nonmetal_only')">비금속</button>
+        <button class="rule-btn" onclick="applyRule('metalloid_only')">준금속</button>
+        <button class="rule-btn" onclick="applyRule('reactivity')">반응성 끝판왕</button>
+        <button class="rule-btn" onclick="applyRule('radius')">원자 크기</button>
+        <button class="rule-btn" onclick="applyRule('electronegativity')">전자 욕심(전기음성도)</button>
+    </div>
+    <div id="rule-description" style="display:none; padding: 15px; background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); border-radius: 10px;">
+        <h3 id="rule-title" style="margin: 0 0 8px 0; color: #00f3ff; font-family: 'Orbitron'; font-size: 16px;"></h3>
+        <p id="rule-text" style="margin: 0; font-size: 13px; color: #ccc; line-height: 1.5;"></p>
+    </div>
+</div>
 
 <script src="data.js"></script>
 <script src="quiz.js"></script>
@@ -196,9 +272,9 @@
     const colors = { '기타 비금속': '#00ff88', '알칼리 금속': '#ff4d4d', '알칼리 토금속': '#ffaa00', '전이 금속': '#a2c2e1', '전이후 금속': '#4da6ff', '준금속': '#00f3ff', '할로젠': '#00cc99', '비활성 기체': '#b366ff', '란타넘족': '#ff66b3', '악티늄족': '#ff3366', '미상': '#888888' };
     
     function getElementPos(i) {
-        let r, c, cat = '미상';
-        if (i >= 57 && i <= 71) { r = 9; c = i - 57 + 4; cat = '란타넘족'; }
-        else if (i >= 89 && i <= 103) { r = 10; c = i - 89 + 4; cat = '악티늄족'; }
+        let r, c;
+        if (i >= 57 && i <= 71) { r = 9; c = i - 57 + 4; }
+        else if (i >= 89 && i <= 103) { r = 10; c = i - 89 + 4; }
         else {
             if (i <= 2) { r = 1; c = i === 1 ? 1 : 18; }
             else if (i <= 10) { r = 2; c = i <= 4 ? i - 2 : i + 8; }
@@ -207,8 +283,8 @@
             else if (i <= 54) { r = 5; c = i - 36; }
             else if (i <= 86) { r = 6; c = i <= 56 ? i - 54 : i - 71 + 3; }
             else { r = 7; c = i <= 88 ? i - 86 : i - 103 + 3; }
-            if (i === 1) cat = '기타 비금속'; else if (c === 1) cat = '알칼리 금속'; else if (c === 2) cat = '알칼리 토금속'; else if (c >= 3 && c <= 12) cat = '전이 금속'; else if (c === 17) cat = '할로젠'; else if (c === 18) cat = '비활성 기체'; else { if ([5, 14, 32, 33, 51, 52].includes(i)) cat = '준금속'; else cat = '전이후 금속'; }
         }
+        let cat = elementDB[i] ? elementDB[i].info.category : '미상';
         return { r, c, cat };
     }
 
@@ -231,12 +307,8 @@
     function openMonitor(id, color) {
         document.getElementById('monitor').style.display = 'block';
         document.getElementById('monitor').style.setProperty('--modal-color', color);
-        
         const headerTitle = document.getElementById('headerTitle');
-        if(headerTitle) {
-            headerTitle.innerText = "SYSTEM MONITOR";
-            headerTitle.style.color = "#00f3ff";
-        }
+        if(headerTitle) { headerTitle.innerText = "SYSTEM MONITOR"; headerTitle.style.color = "#00f3ff"; }
 
         const db = elementDB[id];
         if (db) {
@@ -247,6 +319,23 @@
             document.getElementById('elHistory').innerText = db.info.history;
             const ul = document.getElementById('elUsage'); ul.innerHTML = '';
             db.info.usage.forEach(u => ul.innerHTML += `<li class="usage-item">${u.icon} ${u.text}</li>`);
+
+            const cpSection = document.getElementById('compoundsSection');
+            const cpList = document.getElementById('elCompounds');
+            cpList.innerHTML = '';
+            if (db.compounds && db.compounds.length > 0) {
+                cpSection.style.display = 'block';
+                db.compounds.forEach(cp => {
+                    cpList.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border-left: 3px solid ${color};">
+                            <div style="font-size: 12px; font-weight: bold; color: #fff; margin-bottom: 2px; font-family: 'Orbitron', sans-serif;">
+                                ${cp.formula} <span style="font-size: 11px; color: #aaa; font-weight: normal; font-family: 'Malgun Gothic', sans-serif;">${cp.name}</span>
+                            </div>
+                            <div style="font-size: 10px; color: #888; line-height: 1.3;">${cp.usage}</div>
+                        </div>
+                    `;
+                });
+            } else { cpSection.style.display = 'none'; }
             window.startAtomRender(db.structure.protons, db.structure.neutrons, db.structure.shells, color);
         }
     }
@@ -257,70 +346,126 @@
         cancelAnimationFrame(aniFrame); particles = [];
         for(let i=0; i<p; i++) particles.push({ type:'P', c:'#ff4d4d', x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30 });
         for(let i=0; i<n; i++) particles.push({ type:'N', c:'#a6a6a6', x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30 });
-        
         function draw() {
             ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(0,0,400,400);
             const cx = 200, cy = 200;
-            
-            const maxRadius = 165; 
-            const baseRadius = 45; 
-            const gap = shells.length > 1 ? Math.min(30, (maxRadius - baseRadius) / (shells.length - 1)) : 30;
-            
+            const maxRadius = 165; const baseRadius = 45; const gap = shells.length > 1 ? Math.min(30, (maxRadius - baseRadius) / (shells.length - 1)) : 30;
             shells.forEach((e, idx) => {
                 const r = baseRadius + idx * gap; 
                 ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.stroke();
-                
                 ctx.fillStyle = color; ctx.font = "bold 11px 'Orbitron', sans-serif"; ctx.textAlign = "center";
                 ctx.fillText(e + "e⁻", cx, cy - r - 4); 
-
                 for(let i=0; i<e; i++) {
                     const a = angle * (1.2-idx*0.1) + (Math.PI*2/e)*i;
                     ctx.fillStyle = '#fff'; ctx.shadowBlur = 10; ctx.shadowColor = color;
                     ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r, cy+Math.sin(a)*r, 3.5, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
                 }
             });
-            
-            particles.forEach(pt => {
-                ctx.beginPath(); ctx.arc(cx+pt.x, cy+pt.y, p>20?2.5:4, 0, Math.PI*2); ctx.fillStyle = pt.c; ctx.fill();
-            });
-            
+            particles.forEach(pt => { ctx.beginPath(); ctx.arc(cx+pt.x, cy+pt.y, p>20?2.5:4, 0, Math.PI*2); ctx.fillStyle = pt.c; ctx.fill(); });
             angle += 0.02; aniFrame = requestAnimationFrame(draw);
         }
         draw();
     }
 
-    // 모니터 드래그 앤 드롭 기능
     dragElement(document.getElementById("monitor"));
-
     function dragElement(elmnt) {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         const header = document.getElementById("monitor-header");
-        
         if (header) { header.onmousedown = dragMouseDown; }
-
         function dragMouseDown(e) {
             if (window.quizMode) return; 
             e = e || window.event; e.preventDefault();
             pos3 = e.clientX; pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
+            document.onmouseup = closeDragElement; document.onmousemove = elementDrag;
             header.style.cursor = 'grabbing'; 
         }
-
         function elementDrag(e) {
             e = e || window.event; e.preventDefault();
             pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY;
             pos3 = e.clientX; pos4 = e.clientY;
-            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
             elmnt.style.margin = "0"; elmnt.style.transform = "none"; 
         }
+        function closeDragElement() { document.onmouseup = null; document.onmousemove = null; header.style.cursor = 'move'; }
+    } 
 
-        function closeDragElement() {
-            document.onmouseup = null; document.onmousemove = null;
-            header.style.cursor = 'move'; 
-        }
+    function applyRule(ruleType) {
+        const keys = document.querySelectorAll('.key');
+        const descBox = document.getElementById('rule-description');
+        const title = document.getElementById('rule-title');
+        const text = document.getElementById('rule-text');
+        document.querySelectorAll('.rule-btn, .cat-btn').forEach(btn => btn.classList.remove('active'));
+        if (event && event.target) { event.target.classList.add('active'); }
+        if (ruleType === 'reset') { descBox.style.display = 'none'; keys.forEach(k => k.classList.remove('dimmed', 'highlight')); return; }
+        descBox.style.display = 'block';
+        keys.forEach(k => {
+            const id = parseInt(k.getAttribute('data-id')); const el = elementDB[id]; if(!el) return;
+            const cat = el.info.category; let isMatch = false;
+            if (ruleType === 'metal_only') {
+                title.innerText = "🛠️ 금속 (Metals)"; text.innerText = "주기율표의 약 80%를 차지하며, 전자를 잃고 양이온이 되기 쉬운 원소들입니다. (아래 따로 빠진 두 줄도 모두 금속이에요!)";
+                const nonMetals = ['기타 비금속', '할로젠', '비활성 기체']; const metalloids = ['준금속']; isMatch = !nonMetals.includes(cat) && !metalloids.includes(cat);
+            } 
+            else if (ruleType === 'nonmetal_only') {
+                title.innerText = "🎈 비금속 (Nonmetals)"; text.innerText = "주기율표 오른쪽 위에 모여 있으며(수소 제외), 전자를 얻어 음이온이 되기 쉬운 원소들입니다.";
+                const nonMetals = ['기타 비금속', '할로젠', '비활성 기체']; isMatch = nonMetals.includes(cat);
+            }
+            else if (ruleType === 'metalloid_only') {
+                title.innerText = "🌗 준금속 (Metalloids)"; text.innerText = "금속과 비금속의 성질을 모두 가진 반도체의 핵심 원소들입니다. (규소 등)"; isMatch = (cat === '준금속');
+            }
+            else if (ruleType === 'reactivity') {
+                title.innerText = "🔥 반응성 끝판왕 (1족 & 17족)"; text.innerText = "가장 왼쪽 '알칼리 금속'은 물과 닿으면 폭발하고, 가장 오른쪽 '할로젠'은 미친듯이 반응합니다."; isMatch = (cat === '알칼리 금속' || cat === '할로젠');
+            } 
+            else if (ruleType === 'radius') {
+                title.innerText = "📏 덩치가 큰 원소들 (원자 크기 규칙)"; text.innerText = "주기율표의 왼쪽 아래로 갈수록 전자 껍질이 늘어나 덩치가 커집니다.";
+                const pos = getElementPos(id); isMatch = (pos.c <= 2 && pos.r >= 4);
+            }
+            else if (ruleType === 'electronegativity') {
+                title.innerText = "🧬 전자 욕심쟁이들 (전기음성도)"; text.innerText = "오른쪽 위로 갈수록 전자를 끌어당기는 힘이 강해집니다. 최고 욕심쟁이는 9번 플루오린(F)입니다!";
+                isMatch = [9, 8, 7, 17, 16].includes(id); 
+            }
+            if (isMatch) { k.classList.remove('dimmed'); k.classList.add('highlight'); } 
+            else { k.classList.add('dimmed'); k.classList.remove('highlight'); }
+        });
     }
+
+    const catDescriptions = {
+        '알칼리 금속': '물과 닿으면 폭발적으로 반응하는 무겁지 않은 금속입니다. (1족)',
+        '알칼리 토금속': '알칼리 금속보다 덜 격렬하며, 지각에 많이 포함되어 있습니다. (2족)',
+        '전이 금속': '단단하고 열과 전기를 잘 통하는 전형적인 금속들입니다. (3~12족)',
+        '전이후 금속': '전이 금속보다 무르고 녹는점이 상대적으로 낮은 금속들입니다. (알루미늄, 납 등)',
+        '준금속': '금속과 비금속의 성질을 모두 가진 반도체의 핵심 원소들입니다. (규소 등)',
+        '기타 비금속': '생명체를 이루는 핵심 원소들(탄소, 산소, 수소 등)이 포함되어 있습니다.',
+        '할로젠': '반응성이 매우 커서 다른 원소와 격렬하게 결합하려는 비금속입니다. (17족)',
+        '비활성 기체': '전자가 꽉 차 있어서 다른 원소와 전혀 반응하지 않는 안정한 기체들입니다. (18족)',
+        '란타넘족': '스마트폰, 전기차 모터 등 첨단 산업에 필수적인 희토류 원소들입니다.',
+        '악티늄족': '대부분 불안정하여 스스로 붕괴하며 방사선을 내뿜는 원소들입니다.'
+    };
+
+    function initLegend() {
+        const legendContainer = document.getElementById('category-legend');
+        Object.keys(colors).forEach(cat => {
+            if(cat === '미상') return; 
+            const btn = document.createElement('div');
+            btn.className = 'cat-btn';
+            btn.innerHTML = `<span class="color-dot" style="background:${colors[cat]}; box-shadow: 0 0 8px ${colors[cat]}"></span>${cat}`;
+            btn.onclick = () => {
+                document.querySelectorAll('.cat-btn, .rule-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const descBox = document.getElementById('rule-description');
+                descBox.style.display = 'block';
+                document.getElementById('rule-title').innerText = `🎨 ${cat}`;
+                document.getElementById('rule-title').style.color = colors[cat];
+                document.getElementById('rule-text').innerText = catDescriptions[cat];
+                document.querySelectorAll('.key').forEach(k => {
+                    const id = parseInt(k.getAttribute('data-id'));
+                    if (elementDB[id] && elementDB[id].info.category === cat) { k.classList.remove('dimmed'); k.classList.add('highlight'); } 
+                    else { k.classList.add('dimmed'); k.classList.remove('highlight'); }
+                });
+            };
+            legendContainer.appendChild(btn);
+        });
+    }
+    initLegend();
 </script>
 </body>
 </html>

@@ -8,7 +8,12 @@ const elementDB = {
       description: "우주에서 가장 흔하고 가벼운 원소예요. 모든 별들의 빛나는 엔진 역할을 하죠!",
       usage: [ { text: "로켓 연료", icon: "🚀" }, { text: "친환경 에너지", icon: "🌱" } ],
       history: "1766년 헨리 캐번디시가 발견. 우주 질량의 75%를 차지합니다."
-    }
+    },
+    compounds: [
+  { formula: "H₂O", name: "물", usage: "생명 유지에 필수적인 액체" },
+  { formula: "H₂O₂", name: "과산화수소", usage: "거품이 나는 상처 소독약" },
+  { formula: "CH₄", name: "메테인", usage: "가정용 도시가스 연료" }
+]
   },
   2: {
     id: 2, symbol: "He", nameKo: "헬륨", nameEn: "Helium",
@@ -18,7 +23,8 @@ const elementDB = {
       description: "마시면 목소리가 웃기게 변해요! 공기보다 가벼워서 풍선을 하늘로 띄워준답니다.",
       usage: [ { text: "파티용 풍선", icon: "🎈" }, { text: "MRI 냉각제", icon: "🏥" } ],
       history: "1868년 태양빛의 스펙트럼을 관찰하다 처음 발견되어 태양(Helios)의 이름을 땄습니다."
-    }
+    },
+    compounds: [] // 비활성 기체는 화합물을 만들지 않으므로 빈 배열로 둡니다.
   },
   3: {
     id: 3, symbol: "Li", nameKo: "리튬", nameEn: "Lithium",
@@ -28,7 +34,13 @@ const elementDB = {
       description: "세상에서 가장 가벼운 금속이에요. 물에 닿으면 칙칙 소리를 내며 격렬하게 반응하죠.",
       usage: [ { text: "스마트폰 배터리", icon: "🔋" }, { text: "전기자동차", icon: "🚗" } ],
       history: "1817년 아르프베드손이 광물 속에서 발견했습니다. 그리스어로 '돌(Lithos)'이라는 뜻이에요."
-    }
+    },
+    compounds: [
+      { formula: "LiCoO₂", name: "코발트산 리튬", usage: "스마트폰 배터리의 핵심 양극재 성분" },
+      { formula: "Li₂CO₃", name: "탄산 리튬", usage: "리튬 배터리 원료 및 강화유리 제조" },
+      { formula: "LiOH", name: "수산화 리튬", usage: "차세대 고성능 배터리 및 이산화 탄소 흡수제" },
+      { formula: "LiCl", name: "염화 리튬", usage: "강력한 성능의 제습제 및 금속 제련용" }
+    ]
   },
   4: {
     id: 4, symbol: "Be", nameKo: "베릴륨", nameEn: "Beryllium",
@@ -38,7 +50,13 @@ const elementDB = {
       description: "강철보다 단단하지만 아주 가벼운 금속이에요. 우주선이나 미사일을 만들 때 꼭 필요해요.",
       usage: [ { text: "우주 망원경 거울", icon: "🔭" }, { text: "항공우주 부품", icon: "🚀" } ],
       history: "1798년 루이 니콜라 보클랭이 에메랄드 같은 보석에서 처음 발견했습니다."
-    }
+    },
+    compounds: [
+      { formula: "BeO", name: "산화 베릴륨", usage: "열은 잘 통하고 전기는 안 통하는 특수 세라믹 소재" },
+      { formula: "BeCl₂", name: "염화 베릴륨", usage: "금속 베릴륨을 정제할 때 사용하는 원료" },
+      { formula: "BeF₂", name: "플루오린화 베릴륨", usage: "차세대 원자력 발전소의 특수 냉각재" },
+      { formula: "Be₃Al₂(SiO₃)₆", name: "녹주석(베릴)", usage: "에메랄드와 아쿠아마린 같은 귀한 보석의 기본 성분" }
+    ]
   },
   5: {
     id: 5, symbol: "B", nameKo: "붕소", nameEn: "Boron",
@@ -48,7 +66,13 @@ const elementDB = {
       description: "금속과 비금속의 성질을 모두 가진 변덕쟁이 원소예요. 불꽃놀이에서 예쁜 초록색 빛을 내요.",
       usage: [ { text: "튼튼한 내열 유리", icon: "🧪" }, { text: "바퀴벌레 퇴치약", icon: "🪳" } ],
       history: "1808년 험프리 데이비와 조제프루이 게이뤼삭이 붕사에서 분리해 냈습니다."
-    }
+    },
+    compounds: [
+      { formula: "H₃BO₃", name: "붕산", usage: "약한 소독제나 바퀴벌레를 쫓는 살충제 성분" },
+      { formula: "Na₂B₄O₇·10H₂O", name: "붕사", usage: "액체 괴물(슬라임)을 끈적하게 만드는 핵심 재료" },
+      { formula: "B₂O₃", name: "산화 붕소", usage: "열을 가해도 깨지지 않는 조리용 유리그릇의 원료" },
+      { formula: "B₄C", name: "탄화 붕소", usage: "다이아몬드 다음으로 단단해 방탄복이나 원자로 제어봉에 사용" }
+    ]
   },
 6: {
     id: 6, symbol: "C", nameKo: "탄소", nameEn: "Carbon",
@@ -58,7 +82,14 @@ const elementDB = {
       description: "까만 숯부터 세상에서 가장 단단한 다이아몬드까지 될 수 있는 변신의 귀재예요. 우리 몸을 이루는 핵심 블록이기도 하죠!",
       usage: [ { text: "연필심(흑연)", icon: "✏️" }, { text: "다이아몬드", icon: "💎" }, { text: "플라스틱 소재", icon: "🥤" } ],
       history: "고대부터 숯의 형태로 사용되었으며, 라틴어로 숯을 뜻하는 'carbo'에서 이름이 유래했습니다."
-    }
+    },
+    compounds: [
+      { formula: "CO₂", name: "이산화 탄소", usage: "지구 온난화의 원인이자 탄산음료의 톡 쏘는 기체" },
+      { formula: "CH₄", name: "메테인", usage: "깨끗하게 타는 도시가스(LNG)의 주성분" },
+      { formula: "C₂H₅OH", name: "에탄올", usage: "술의 성분이며 손 소독제를 만드는 데 사용" },
+      { formula: "C₆H₁₂O₆", name: "포도당", usage: "생물이 에너지를 얻기 위해 분해하는 가장 기본적인 당" },
+      { formula: "NaHCO₃", name: "탄산수소 나트륨", usage: "빵을 부풀릴 때 쓰는 베이킹소다의 주성분" }
+    ]
   },
   7: {
     id: 7, symbol: "N", nameKo: "질소", nameEn: "Nitrogen",
@@ -68,7 +99,13 @@ const elementDB = {
       description: "우리가 숨 쉬는 공기의 78%를 차지해요. 과자 봉지가 빵빵한 이유도 질소 가스가 들어있기 때문이랍니다.",
       usage: [ { text: "과자 봉지 충전재", icon: "🍟" }, { text: "식물을 키우는 비료", icon: "🌱" }, { text: "급속 냉각(액체질소)", icon: "❄️" } ],
       history: "1772년 다니엘 러더퍼드가 발견했습니다. 생명체의 단백질과 DNA를 만드는 데 필수적인 원소입니다."
-    }
+    },
+    compounds: [
+      { formula: "NH₃", name: "암모니아", usage: "식물을 키우는 비료의 핵심 원료이며 코를 찌르는 냄새가 남" },
+      { formula: "N₂O", name: "아산화 질소", usage: "치과에서 통증을 줄이는 웃음가스나 휘핑크림 가스로 사용" },
+      { formula: "NO₂", name: "이산화 질소", usage: "자동차 배기가스에서 나오는 갈색의 대기 오염 물질" },
+      { formula: "HNO₃", name: "질산", usage: "산업 현장에서 금속을 녹이거나 화약을 만들 때 쓰이는 강한 산" }
+    ]
   },
   8: {
     id: 8, symbol: "O", nameKo: "산소", nameEn: "Oxygen",
@@ -78,7 +115,14 @@ const elementDB = {
       description: "동물과 사람이 숨을 쉴 때 꼭 필요해요. 불이 활활 타오르게 도와주는 역할도 한답니다.",
       usage: [ { text: "호흡용 산소통", icon: "🤿" }, { text: "로켓의 산화제", icon: "🚀" }, { text: "의료용 생명 유지", icon: "🏥" } ],
       history: "1774년 조지프 프리스틀리가 발견했습니다. 지구 지각과 바다에서 가장 많은 질량을 차지하는 원소입니다."
-    }
+    },
+    compounds: [
+      { formula: "H₂O", name: "물", usage: "지구상의 모든 생명체가 살아가는 데 꼭 필요한 액체" },
+      { formula: "CO₂", name: "이산화 탄소", usage: "지구 온난화의 원인이자 식물의 광합성에 쓰이는 기체" },
+      { formula: "O₃", name: "오존", usage: "하늘 높은 곳에서 태양의 유해한 자외선을 막아주는 보호막" },
+      { formula: "SiO₂", name: "이산화 규소", usage: "해변의 모래와 유리창을 만드는 유리의 주성분" },
+      { formula: "H₂O₂", name: "과산화수소", usage: "산소를 내뿜으며 세균을 죽이는 상처 소독약" }
+    ]
   },
   9: {
     id: 9, symbol: "F", nameKo: "플루오린", nameEn: "Fluorine",
@@ -88,7 +132,13 @@ const elementDB = {
       description: "다른 원소들과 너무 친해지고 싶어서 뭐든지 녹이고 결합해 버리는 아주 강력하고 활동적인 기체예요.",
       usage: [ { text: "충치 예방(치약)", icon: "🪥" }, { text: "프라이팬 코팅(테플론)", icon: "🍳" }, { text: "냉매 가스", icon: "❄️" } ],
       history: "1886년 앙리 무아상이 처음 분리해 냈습니다. 이 공로로 노벨 화학상을 받았습니다."
-    }
+    },
+    compounds: [
+      { formula: "NaF", name: "플루오린화 나트륨", usage: "충치 예방을 위해 치약에 소량 들어가는 성분" },
+      { formula: "HF", name: "플루오린화 수소", usage: "반도체 회로를 깎거나 유리를 가공할 때 쓰는 독성이 강한 불산" },
+      { formula: "(C₂F₄)ₙ", name: "테플론", usage: "프라이팬 바닥이 눌어붙지 않게 하는 매끄러운 코팅 재료" },
+      { formula: "CaF₂", name: "플루오린화 칼슘", usage: "형석이라는 광물로 존재하며 특수 렌즈 제작에 사용" }
+    ]
   },
   10: {
     id: 10, symbol: "Ne", nameKo: "네온", nameEn: "Neon",
@@ -98,7 +148,8 @@ const elementDB = {
       description: "전기를 통과시키면 아주 예쁜 붉은 주황색 빛을 내요. 밤거리를 빛내는 간판의 주인공이랍니다.",
       usage: [ { text: "화려한 네온사인", icon: "🚥" }, { text: "바코드 스캐너(레이저)", icon: "🛒" }, { text: "고전압 표시기", icon: "⚡" } ],
       history: "1898년 윌리엄 램지와 모리스 트래버스가 발견했습니다. 그리스어로 '새롭다(neos)'는 뜻입니다."
-    }
+    },
+    compounds: [] // 비활성 기체는 자연 상태에서 화합물을 형성하지 않습니다.
   },
   11: {
     id: 11, symbol: "Na", nameKo: "나트륨", nameEn: "Sodium",
@@ -108,7 +159,14 @@ const elementDB = {
       description: "칼로 썰릴 만큼 무른 금속이에요. 물에 닿으면 폭발하지만, 염소(Cl)와 만나면 짭짤한 소금이 돼요!",
       usage: [ { text: "소금(염화나트륨)", icon: "🧂" }, { text: "가로등(나트륨등)", icon: "💡" }, { text: "베이킹소다", icon: "🧁" } ],
       history: "1807년 험프리 데이비가 전기분해로 처음 분리했습니다. 영미권에서는 '소듐(Sodium)'이라고 부릅니다."
-    }
+    },
+    compounds: [
+      { formula: "NaCl", name: "염화 나트륨", usage: "우리가 매일 먹는 소금이자 식품의 보존제" },
+      { formula: "NaHCO₃", name: "탄산수소 나트륨", usage: "빵을 부풀리는 베이킹소다 및 소화제 성분" },
+      { formula: "NaOH", name: "수산화 나트륨", usage: "비누를 만들거나 막힌 배수구를 뚫는 강력한 세정제" },
+      { formula: "NaOCl", name: "차아염소산 나트륨", usage: "집안을 살균 소독할 때 쓰는 락스의 주성분" },
+      { formula: "C₅H₈NO₄Na", name: "글루탐산 나트륨", usage: "음식의 감칠맛을 내는 조미료(MSG)의 성분" }
+    ]
   },
   12: {
     id: 12, symbol: "Mg", nameKo: "마그네슘", nameEn: "Magnesium",
@@ -118,7 +176,13 @@ const elementDB = {
       description: "가벼우면서도 튼튼해서 자동차나 노트북을 만들 때 써요. 불을 붙이면 눈이 부실 정도로 하얗고 밝게 타오르죠.",
       usage: [ { text: "가벼운 노트북 케이스", icon: "💻" }, { text: "불꽃놀이(백색광)", icon: "🎆" }, { text: "식물의 엽록소", icon: "🌿" } ],
       history: "1755년 조지프 블랙이 마그네시아(Magnesia)라는 지역의 광물에서 처음 확인했습니다."
-    }
+    },
+    compounds: [
+      { formula: "MgO", name: "산화 마그네슘", usage: "고온을 견디는 내화 벽돌이나 가루 형태의 제산제" },
+      { formula: "MgCl₂", name: "염화 마그네슘", usage: "두부를 만들 때 콩물을 굳히는 '간수'의 주성분" },
+      { formula: "Mg(OH)₂", name: "수산화 마그네슘", usage: "속 쓰림을 달래주는 하얀색 액체 제산제 성분" },
+      { formula: "MgSO₄", name: "황산 마그네슘", usage: "피로 회복용 입욕제(앱섬솔트)나 식물 영양제" }
+    ]
   },
   13: {
     id: 13, symbol: "Al", nameKo: "알루미늄", nameEn: "Aluminum",
@@ -128,7 +192,13 @@ const elementDB = {
       description: "가볍고 녹슬지 않아서 캔 음료수나 비행기를 만드는 데 아주 많이 쓰이는 은백색 금속이에요.",
       usage: [{text: "음료수 캔", icon: "🥤" }, { text: "주방용 호일", icon: "🍱" }, { text: "비행기 동체", icon: "✈️" } ],
       history: "지구 지각에서 세 번째로 흔한 원소지만, 과거에는 정제하기가 어려워 금보다 비쌌던 시절도 있었습니다."
-    }
+    },
+    compounds: [
+      { formula: "Al₂O₃", name: "산화 알루미늄", usage: "알루미늄 표면의 녹을 방지하는 보호막이자 루비, 사파이어 같은 보석의 성분" },
+      { formula: "Al(OH)₃", name: "수산화 알루미늄", usage: "제산제(위산 중화)나 정수장에서 물을 깨끗하게 할 때 사용" },
+      { formula: "KAl(SO₄)₂·12H₂O", name: "명반 (백반)", usage: "봉숭아 물을 들일 때나 종이를 단단하게 가공할 때 쓰는 재료" },
+      { formula: "AlCl₃", name: "염화 알루미늄", usage: "땀 억제제(데오도란트) 성분이나 석유 화학 공정의 촉매" }
+    ]
   },
   14: {
     id: 14, symbol: "Si", nameKo: "규소", nameEn: "Silicon",
@@ -138,7 +208,13 @@ const elementDB = {
       description: "모래와 유리의 주성분이에요. 전기가 통하기도 하고 안 통하기도 해서 컴퓨터 두뇌(반도체)를 만드는 핵심 재료랍니다.",
       usage: [ { text: "컴퓨터 반도체 칩", icon: "🖧" }, { text: "유리창", icon: "🪟" }, { text: "실리콘 고무", icon: "🧤" } ],
       history: "1824년 옌스 야코브 베르셀리우스가 발견했습니다. 현대 IT 시대를 연 실리콘 밸리의 어원이 되었습니다."
-    }
+    },
+    compounds: [
+      { formula: "SiO₂", name: "이산화 규소", usage: "모래, 석영, 유리의 주성분이며 반도체 웨이퍼를 만드는 핵심 원료" },
+      { formula: "SiC", name: "탄화 규소", usage: "다이아몬드만큼 단단하여 금속을 깎는 연마제나 고온용 반도체에 사용" },
+      { formula: "Si₃N₄", name: "질화 규소", usage: "열에 강하고 매우 단단하여 엔진 부품이나 절삭 도구로 쓰이는 세라믹" },
+      { formula: "(R₂SiO)ₙ", name: "실리콘 (실록세인)", usage: "방수용 접착제, 주방용 조리기구, 의료용 소재로 쓰이는 고분자 물질" }
+    ]
   },
   15: {
     id: 15, symbol: "P", nameKo: "인", nameEn: "Phosphorus",
@@ -148,7 +224,14 @@ const elementDB = {
       description: "어두운 곳에서 스스로 빛을 내는 신기한 성질이 있어요. 성냥의 머리 부분과 우리 몸의 뼈, DNA를 구성하죠.",
       usage: [ { text: "성냥의 발화제", icon: "🔥" }, { text: "농업용 비료", icon: "🌾" }, { text: "우리 몸의 뼈", icon: "🦴" } ],
       history: "1669년 헤니히 브란트가 소변(!)을 끓여서 처음 발견했습니다. '빛을 가져오는 자'라는 뜻입니다."
-    }
+    },
+    compounds: [
+      { formula: "H₃PO₄", name: "인산", usage: "콜라의 톡 쏘는 신맛을 내거나 금속의 녹을 제거할 때 사용" },
+      { formula: "Ca₃(PO₄)₂", name: "인산 칼슘", usage: "우리 몸의 뼈와 치아를 딱딱하고 튼튼하게 만드는 주성분" },
+      { formula: "P₄O₁₀", name: "십산화 사인", usage: "수분을 아주 잘 흡수하여 강력한 건조제로 쓰이는 물질" },
+      { formula: "(NH₄)₃PO₄", name: "인산 암모늄", usage: "식물이 자라는 데 꼭 필요한 인을 공급하는 비료의 원료" }
+    ]
+
   },
   16: {
     id: 16, symbol: "S", nameKo: "황", nameEn: "Sulfur",
@@ -158,7 +241,13 @@ const elementDB = {
       description: "온천이나 화산 근처에서 나는 쾌꼬리한 달걀 썩은 냄새의 원인이에요. 노란색을 띠고 화약의 재료로 쓰입니다.",
       usage: [ { text: "온천 입욕제", icon: "♨️" }, { text: "화약 제조", icon: "🧨" }, { text: "타이어(고무 강화)", icon: "🛞" } ],
       history: "고대부터 알려진 원소로, 성경에도 '유황불'로 등장합니다. 라틴어 'Sulphur'에서 유래했습니다."
-    }
+    },
+        compounds: [
+      { formula: "H₂SO₄", name: "황산", usage: "자동차 배터리(축전지) 전해액이나 비료 제조에 쓰이는 강한 산" },
+      { formula: "H₂S", name: "황화 수소", usage: "달걀 썩는 냄새가 나는 온천 가스의 성분이며 독성이 강함" },
+      { formula: "SO₂", name: "이산화 황", usage: "화산 가스에 들어있으며 와인의 변질을 막는 보존제로도 사용" },
+      { formula: "CaSO₄", name: "황산 칼슘", usage: "조각상을 만드는 석고나 부러진 뼈를 고정하는 깁스의 주재료" }
+    ]
   },
   17: {
     id: 17, symbol: "Cl", nameKo: "염소", nameEn: "Chlorine",
@@ -168,7 +257,13 @@ const elementDB = {
       description: "수영장에서 나는 특유의 소독약 냄새가 바로 염소예요. 세균을 없애는 데 아주 탁월한 황록색 가스랍니다.",
       usage: [ { text: "수영장 물 소독", icon: "🏊‍♂️" }, { text: "락스(표백제)", icon: "👕" }, { text: "플라스틱(PVC) 파이프", icon: "🚰" } ],
       history: "1774년 칼 빌헬름 셸레가 발견했습니다. 그리스어로 황록색을 뜻하는 'Chloros'에서 따왔습니다."
-    }
+    },
+    compounds: [
+      { formula: "NaCl", name: "염화 나트륨", usage: "식탁용 소금의 주성분이자 생명 유지에 필수적인 전해질" },
+      { formula: "HCl", name: "염화 수소", usage: "음식물의 소화를 돕는 위산의 성분이며 산업용 세정제로 사용" },
+      { formula: "NaOCl", name: "차아염소산 나트륨", usage: "집안을 살균하고 옷을 하얗게 만드는 '락스'의 핵심 성분" },
+      { formula: "PVC", name: "폴리염화 비닐", usage: "하수도 파이프, 바닥재, 장갑 등을 만드는 흔한 플라스틱 재료" }
+    ]
   },
   18: {
     id: 18, symbol: "Ar", nameKo: "아르곤", nameEn: "Argon",
@@ -178,7 +273,8 @@ const elementDB = {
       description: "다른 물질과 절대 반응하지 않는 게으른 성격이에요. 그래서 전구 안의 필라멘트가 타지 않게 보호해 주는 역할을 해요.",
       usage: [ { text: "백열전구 충전재", icon: "💡" }, { text: "용접 보호 가스", icon: "🛠️" }, { text: "단열 유리창", icon: "🪟" } ],
       history: "1894년 레일리 경과 윌리엄 램지가 공기 중에서 발견했습니다. 그리스어로 '게으른'이라는 뜻입니다."
-    }
+    },
+    compounds: [] // 비활성 기체는 자연 상태에서 안정된 화합물을 형성하지 않습니다.
   },
   19: {
     id: 19, symbol: "K", nameKo: "칼륨", nameEn: "Potassium",
@@ -188,7 +284,13 @@ const elementDB = {
       description: "바나나에 많이 들어있는 영양소예요. 나트륨과 비슷하게 물에 닿으면 보라색 불꽃을 내며 폭발적으로 반응하죠.",
       usage: [ { text: "식물 비료", icon: "🪴" }, { text: "비누 제조", icon: "🧼" }, { text: "인체 신경 전달", icon: "🍌" } ],
       history: "1807년 험프리 데이비가 분리했습니다. 독일어로는 '칼륨(Kalium)', 영어로는 '포타슘(Potassium)'이라고 부릅니다."
-    }
+    },
+    compounds: [
+      { formula: "KCl", name: "염화 칼륨", usage: "나트륨 섭취를 줄이기 위해 소금 대신 쓰이는 '저나트륨 소금' 성분" },
+      { formula: "KOH", name: "수산화 칼륨", usage: "액체 비누를 만들거나 알칼리 배터리에 사용하는 강력한 염기성 물질" },
+      { formula: "KNO₃", name: "질산 칼륨", usage: "식물이 자라는 데 꼭 필요한 비료나 화약을 만드는 데 쓰이는 원료" },
+      { formula: "KMnO₄", name: "과망가니즈산 칼륨", usage: "진한 보라색을 띠며 살균 소독이나 화학 실험의 산화제로 사용" }
+    ]
   },
   20: {
     id: 20, symbol: "Ca", nameKo: "칼슘", nameEn: "Calcium",
@@ -198,7 +300,14 @@ const elementDB = {
       description: "우유와 멸치에 많이 들어있어서 우리의 뼈와 치아를 아주 튼튼하게 만들어주는 고마운 은백색 금속이에요.",
       usage: [ { text: "튼튼한 뼈와 치아", icon: "🦷" }, { text: "석고 깁스", icon: "🩹" }, { text: "시멘트 원료", icon: "🧱" } ],
       history: "1808년 험프리 데이비가 분리했습니다. 조개껍데기나 석회석을 뜻하는 라틴어 'Calx'에서 유래했어요."
-    }
+    },
+    compounds: [
+      { formula: "CaCO₃", name: "탄산 칼슘", usage: "조개껍데기, 달걀껍데기, 분필, 대리석의 주성분" },
+      { formula: "CaO", name: "산화 칼슘", usage: "생석회라고도 하며, 식품용 건조제(김 봉지 속 하얀 가루)로 사용" },
+      { formula: "CaCl₂", name: "염화 칼슘", usage: "겨울철 도로의 눈을 녹이는 제설제나 옷장 속 습기 제거제 성분" },
+      { formula: "CaSO₄", name: "황산 칼슘", usage: "미술용 석고상이나 부러진 뼈를 고정하는 깁스(석고)의 재료" },
+      { formula: "Ca(OH)₂", name: "수산화 칼슘", usage: "석회수라고 불리며 산성 토양을 중화하거나 건축 재료로 사용" }
+    ]
   },
 21: {
     id: 21, symbol: "Sc", nameKo: "스칸듐", nameEn: "Scandium",
@@ -218,7 +327,12 @@ const elementDB = {
       description: "강철만큼 튼튼하지만 무게는 절반밖에 안 되는 마법의 금속이에요! 인공 뼈를 만들 때도 쓰일 만큼 사람 몸과 잘 맞아요.",
       usage: [ { text: "인공 관절과 임플란트", icon: "🦴" }, { text: "우주선과 전투기", icon: "✈️" }, { text: "튼튼한 안경테", icon: "👓" } ],
       history: "1791년 윌리엄 그레고어가 발견했습니다. 그리스 신화의 거인족 '타이탄'에서 유래했습니다."
-    }
+    },
+    compounds: [
+      { formula: "TiO₂", name: "이산화 티타늄", usage: "자외선을 차단하는 선크림이나 하얀색 페인트의 핵심 성분" },
+      { formula: "TiCl₄", name: "사염화 티타늄", usage: "공기 중에서 흰 연기를 만들어 연막탄이나 인공 구름을 만들 때 사용" },
+      { formula: "TiN", name: "질화 티타늄", usage: "금색 빛이 나며 매우 단단해 드릴 비트나 공구의 코팅제로 사용" }
+    ]
   },
   23: {
     id: 23, symbol: "V", nameKo: "바나듐", nameEn: "Vanadium",
@@ -238,7 +352,12 @@ const elementDB = {
       description: "반짝반짝 빛나고 절대 녹슬지 않게 해줘요. 수도꼭지나 자동차 휠이 반짝이는 이유가 바로 크로뮴 코팅 덕분이죠.",
       usage: [ { text: "반짝이는 수도꼭지", icon: "🚰" }, { text: "녹슬지 않는 스테인리스", icon: "🍴" }, { text: "루비의 붉은빛", icon: "🔴" } ],
       history: "1797년 루이 니콜라 보클랭이 발견했습니다. 그리스어로 '색깔(chroma)'이라는 뜻을 가졌습니다."
-    }
+    },
+    compounds: [
+      { formula: "Cr₂O₃", name: "산화 크로뮴(III)", usage: "유리나 도자기를 진한 초록색으로 물들일 때 쓰는 안료" },
+      { formula: "K₂Cr₂O₇", name: "중크로뮴산 칼륨", usage: "강력한 산화제로, 음주 측정기 내부에서 알코올과 반응해 색이 변하는 성분" },
+      { formula: "PbCrO₄", name: "크로뮴산 납", usage: "과거 도로의 노란색 중앙선을 칠할 때 썼던 선명한 노란색 안료" }
+    ]
   },
   25: {
     id: 25, symbol: "Mn", nameKo: "망가니즈", nameEn: "Manganese",
@@ -248,7 +367,12 @@ const elementDB = {
       description: "유리가 초록색으로 변하는 걸 막아주는 투명 마법사예요. 건전지 속에도 숨어있답니다.",
       usage: [ { text: "일반 건전지", icon: "🔋" }, { text: "투명한 유리 제조", icon: "🪟" }, { text: "철강을 단단하게", icon: "🏗️" } ],
       history: "1774년 요한 고틀리브 간이 분리해 냈습니다. 옛날에는 자석을 뜻하는 '마그네스'와 헷갈리기도 했어요."
-    }
+    },
+    compounds: [
+      { formula: "KMnO₄", name: "과망가니즈산 칼륨", usage: "강렬한 보라색을 띠며 세균을 죽이는 소독제나 화학 실험용 산화제로 사용" },
+      { formula: "MnO₂", name: "이산화 망가니즈", usage: "우리가 흔히 쓰는 알칼라인 건전지 내부를 채우고 있는 검은색 가루 성분" },
+      { formula: "MnSO₄", name: "황산 망가니즈", usage: "식물이 잘 자라게 돕는 비료나 가축의 사료 첨가제로 쓰이는 영양 성분" }
+    ]
   },
   26: {
     id: 26, symbol: "Fe", nameKo: "철", nameEn: "Iron",
@@ -258,7 +382,13 @@ const elementDB = {
       description: "우리 몸속 피를 붉게 만들고, 튼튼한 건물과 자동차의 뼈대가 되는 아주 고마운 금속이에요.",
       usage: [ { text: "튼튼한 건축물 뼈대", icon: "🏗️" }, { text: "자동차와 기차", icon: "🚂" }, { text: "우리 몸의 헤모글로빈", icon: "🩸" } ],
       history: "우주의 무거운 별들이 수명이 다해 터질 때 만들어진, 별의 종착역 같은 원소입니다."
-    }
+    },
+    compounds: [
+      { formula: "Fe₂O₃", name: "산화 철(III)", usage: "철 광석의 주성분이자 철이 녹슬었을 때 생기는 붉은색 물질" },
+      { formula: "FeSO₄", name: "황산 철(II)", usage: "철분이 부족할 때 먹는 빈혈 치료제(철분제)나 잉크 제조" },
+      { formula: "FeCl₃", name: "염화 철(III)", usage: "반도체 회로 기판을 깎아내는 에칭액이나 정수장의 응집제" },
+      { formula: "Fe₃C", name: "시멘타이트", usage: "강철 속에 들어있어 금속을 아주 단단하게 만드는 탄화물" }
+    ]
   },
   27: {
     id: 27, symbol: "Co", nameKo: "코발트", nameEn: "Cobalt",
@@ -268,7 +398,12 @@ const elementDB = {
       description: "아름다운 파란색을 내는 데 쓰여요. 자석을 만드는 데도 필수적이고, 전기차 배터리에도 들어간답니다.",
       usage: [ { text: "파란색 도자기 안료", icon: "🏺" }, { text: "강력한 영구자석", icon: "🧲" }, { text: "전기차 리튬 배터리", icon: "🔋" } ],
       history: "1735년 게오르그 브란트가 발견했습니다. 독일 전설 속 지하실 요정 '코볼트(Kobold)'에서 이름이 유래했어요."
-    }
+    },
+    compounds: [
+      { formula: "LiCoO₂", name: "리튬 코발트 산화물", usage: "스마트폰과 노트북 배터리 내부에서 에너지를 저장하는 핵심 전극 물질" },
+      { formula: "CoAl₂O₄", name: "코발트 블루 (알루민산 코발트)", usage: "도자기나 유리를 아주 깊고 아름다운 파란색으로 물들일 때 쓰는 안료" },
+      { formula: "CoCl₂", name: "염화 코발트", usage: "습기를 먹으면 분홍색, 마르면 파란색으로 변해 습기를 체크하는 종이(시험지)에 사용" }
+    ]
   },
   28: {
     id: 28, symbol: "Ni", nameKo: "니켈", nameEn: "Nickel",
@@ -278,7 +413,12 @@ const elementDB = {
       description: "동전을 반짝이게 만들고, 철과 섞여서 절대 녹슬지 않는 '스테인리스'를 만드는 일등 공신이에요.",
       usage: [{text: "은빛 동전", icon: "🪙" }, { text: "주방용 냄비와 수저", icon: "🥄" }, { text: "충전용 건전지", icon: "🔋" } ],
       history: "1751년 악셀 프레드릭 크론스테트가 발견. 광부들이 구리인 줄 알았다가 속았다고 해서 '악마의 구리(Kupfernickel)'라 불렀습니다."
-    }
+    },
+    compounds: [
+      { formula: "NiSO₄", name: "황산 니켈", usage: "금속 표면을 은백색으로 반짝이게 입히는 니켈 도금액의 주성분" },
+      { formula: "Ni(OH)₂", name: "수산화 니켈", usage: "충전해서 다시 쓰는 니켈-카드뮴 배터리 등의 전극 재료" },
+      { formula: "NiO", name: "산화 니켈", usage: "특수 유리나 세라믹에 섞어 회색 또는 초록색 빛을 내는 데 사용" }
+    ]
   },
   29: {
     id: 29, symbol: "Cu", nameKo: "구리", nameEn: "Copper",
@@ -288,7 +428,13 @@ const elementDB = {
       description: "전기를 아주 잘 통하게 해서 우리가 쓰는 모든 전선의 재료가 돼요. 시간이 지나면 자유의 여신상처럼 초록색으로 변한답니다.",
       usage: [ { text: "가전제품 전선", icon: "🔌" }, { text: "보일러 파이프", icon: "♨️" }, { text: "자유의 여신상", icon: "🗽" } ],
       history: "기원전 9000년경부터 인류가 사용한 가장 오래된 금속 중 하나입니다. 키프로스(Cyprus) 섬의 이름에서 유래했어요."
-    }
+    },
+    compounds: [
+      { formula: "CuSO₄", name: "황산 구리", usage: "아름다운 파란색 결정으로 유명하며, 수영장 소독제나 살균제로 사용" },
+      { formula: "CuO", name: "산화 구리(II)", usage: "유리나 도자기를 푸른색 또는 초록색으로 물들일 때 쓰이는 검은색 안료" },
+      { formula: "Cu₂O", name: "산화 구리(I)", usage: "배 밑바닥에 해양 생물이 달라붙지 않게 하는 페인트나 태양전지 소재" },
+      { formula: "Cu₂CO₃(OH)₂", name: "염기성 탄산 구리", usage: "자유의 여신상을 초록색으로 변하게 만든 '구리 녹'의 주성분" }
+    ]
   },
   30: {
     id: 30, symbol: "Zn", nameKo: "아연", nameEn: "Zinc",
@@ -298,7 +444,13 @@ const elementDB = {
       description: "철이 녹슬지 않게 대신 희생해서 부식을 막아주는 착한 보디가드 금속이에요. 선크림에도 들어있죠!",
       usage: [ { text: "건축용 철판 코팅", icon: "🛡️" }, { text: "자외선 차단 선크림", icon: "🧴" }, { text: "면역력 영양제", icon: "💊" } ],
       history: "독일의 연금술사 파라셀수스가 처음 아연을 'Zincum'이라 불렀으며, 뾰족하게 결정이 맺히는 모양에서 유래했습니다."
-    }
+    },
+    compounds: [
+      { formula: "ZnO", name: "산화 아연", usage: "자외선을 차단하는 선크림이나 피부 보호용 연고의 주성분" },
+      { formula: "ZnS", name: "황화 아연", usage: "빛을 받으면 밤에 빛나는 야광 시계나 형광등의 형광체 성분" },
+      { formula: "ZnSO₄", name: "황산 아연", usage: "식물이 잘 자라게 돕는 비료나 아연 영양제의 원료" },
+      { formula: "ZnCl₂", name: "염화 아연", usage: "금속을 붙이는 납땜액이나 목재가 썩지 않게 하는 방부제" }
+    ]
   },
   31: {
     id: 31, symbol: "Ga", nameKo: "갈륨", nameEn: "Gallium",
@@ -348,7 +500,13 @@ const elementDB = {
       description: "주기율표에서 상온일 때 액체인 원소는 수은과 브로민 딱 두 개뿐이에요! 아주 고약한 냄새가 나는 붉은색 액체랍니다.",
       usage: [ { text: "수영장 소독제", icon: "🏊" }, { text: "불에 안 타는 난연제", icon: "🧯" }, { text: "과거 사진 필름", icon: "🎞️" } ],
       history: "1826년 앙투안 제롬 발라르가 바닷물에서 발견했습니다. 그리스어로 '악취(bromos)'라는 뜻입니다."
-    }
+    },
+    compounds: [
+      { formula: "AgBr", name: "브로민화 은", usage: "빛에 민감하게 반응하여 필름 카메라의 사진을 인화할 때 사용" },
+      { formula: "KBr", name: "브로민화 칼륨", usage: "과거에 진정제나 간질 치료제로 쓰였던 화합물" },
+      { formula: "LiBr", name: "브로민화 리튬", usage: "공기 중의 수분을 아주 잘 흡수하여 대형 에어컨의 습기 제거제로 사용" },
+      { formula: "CH₃Br", name: "브로민화 메틸", usage: "강력한 살충 효과가 있어 농작물을 소독할 때 사용하는 가스" }
+    ]
   },
   36: {
     id: 36, symbol: "Kr", nameKo: "크립톤", nameEn: "Krypton",
@@ -378,7 +536,13 @@ const elementDB = {
       description: "칼슘과 성질이 아주 비슷해요. 불꽃놀이에서 강력하고 아름다운 빨간색 불꽃을 담당하는 핵심 원소랍니다.",
       usage: [ { text: "빨간색 불꽃놀이", icon: "🎇" }, { text: "야광 페인트", icon: "🎨" }, { text: "민감성 치아용 치약", icon: "🪥" } ],
       history: "1790년 스코틀랜드의 작은 마을 스트론티안(Strontian)의 납 광산에서 처음 발견되었습니다."
-    }
+    },
+    compounds: [
+      { formula: "Sr(NO₃)₂", name: "질산 스트론튬", usage: "불꽃놀이나 구조용 신호탄에서 강렬한 붉은색 빛을 내는 성분" },
+      { formula: "SrCO₃", name: "탄산 스트론튬", usage: "특수 유리 제조나 붉은색 불꽃의 원료, 또는 도자기 유약" },
+      { formula: "SrCl₂", name: "염화 스트론튬", usage: "시린 이의 통증을 줄여주는 민감성 치약의 유효 성분" },
+      { formula: "SrTiO₃", name: "티탄산 스트론튬", usage: "다이아몬드처럼 반짝여서 인조 보석으로 쓰이거나 정밀한 전자 부품의 재료" }
+    ]
   },
   39: {
     id: 39, symbol: "Y", nameKo: "이트륨", nameEn: "Yttrium",
@@ -458,7 +622,12 @@ const elementDB = {
       description: "수소 가스를 스펀지처럼 엄청나게 많이 빨아들일 수 있는 신기한 금속이에요. 자동차 매연을 깨끗하게 걸러주죠.",
       usage: [ { text: "자동차 촉매 변환기", icon: "🚙" }, { text: "수소 자동차 연료전지", icon: "🔋" }, { text: "치과용 금속 합금", icon: "🦷" } ],
       history: "1803년 윌리엄 하이드 울러스턴이 발견했습니다. 그 당시 새로 발견된 소행성 '팔라스(Pallas)'의 이름을 땄어요."
-    }
+    },
+    compounds: [
+      { formula: "PdCl₂", name: "염화 팔라듐", usage: "공기 중의 일산화 탄소를 감지하는 센서나 화학 반응의 촉매제로 사용" },
+      { formula: "PdO", name: "산화 팔라듐", usage: "수소를 물로 바꾸는 반응이나 다양한 유기 합성 반응을 돕는 촉매" },
+      { formula: "Pd(CH₃COO)₂", name: "아세트산 팔라듐", usage: "고급 화학 의약품을 만들 때 탄소끼리 연결해 주는 중요한 역할" }
+    ]
   },
   47: {
     id: 47, symbol: "Ag", nameKo: "은", nameEn: "Silver",
@@ -468,7 +637,14 @@ const elementDB = {
       description: "세상 모든 금속 중에서 전기를 가장 잘 통하고 열도 가장 잘 전달하는 최고의 챔피언이에요. 반짝이는 보석이기도 하죠.",
       usage: [ { text: "은수저와 장신구", icon: "🥄" }, { text: "최고급 전자기기 회로", icon: "📱" }, { text: "항균 필터(나노 은)", icon: "🦠" } ],
       history: "고대부터 화폐와 장신구로 사용되었습니다. 원소 기호 Ag는 라틴어로 은을 뜻하는 'Argentum'에서 왔어요."
-    }
+    },
+    compounds: [
+      { formula: "AgNO₃", name: "질산 은", usage: "거울의 은막을 만들거나 상처 부위를 소독하는 부식제로 사용" },
+      { formula: "AgCl", name: "염화 은", usage: "빛에 반응하는 성질을 이용해 인화지나 사진 필름을 만드는 재료" },
+      { formula: "Ag₂O", name: "산화 은", usage: "작지만 전압이 일정하고 오래가는 단추형 건전지의 주성분" },
+      { formula: "AgI", name: "아이오딘화 은", usage: "구름 속에 뿌려 인공적으로 비를 내리게 하는 인공 강우의 씨앗" }
+    ]
+
   },
   48: {
     id: 48, symbol: "Cd", nameKo: "카드뮴", nameEn: "Cadmium",
@@ -498,7 +674,12 @@ const elementDB = {
       description: "철이 녹슬지 않게 깡통 겉면에 얇게 발라주는 은빛 금속이에요. 구리와 섞으면 튼튼한 청동이 된답니다.",
       usage: [ { text: "통조림 깡통 코팅", icon: "🥫" }, { text: "납땜(전자회로 연결)", icon: "⚡" }, { text: "청동 조각상", icon: "🗽" } ],
       history: "청동기 시대를 연 핵심 금속입니다. 라틴어 'Stannum'에서 원소 기호 Sn이 유래했습니다."
-    }
+    },
+    compounds: [
+      { formula: "SnCl₂", name: "염화 주석", usage: "강철판에 주석을 입혀 통조림 캔(함석)을 만들 때 사용하는 원료" },
+      { formula: "SnF₂", name: "플루오린화 주석", usage: "치약에 들어가 치아를 튼튼하게 하고 충치를 예방하는 성분" },
+      { formula: "SnO₂", name: "이산화 주석", usage: "도자기 유약을 불투명하게 만들거나 보석을 닦는 연마제로 사용" }
+    ]
   },
   51: {
     id: 51, symbol: "Sb", nameKo: "안티모니", nameEn: "Antimony",
@@ -528,7 +709,13 @@ const elementDB = {
       description: "상처가 났을 때 바르는 갈색 소독약(빨간약)의 정체예요. 미역이나 다시마에도 많이 들어있어서 우리 몸을 건강하게 해 주죠.",
       usage: [ { text: "상처 소독약", icon: "🩹" }, { text: "갑상선 건강(미역)", icon: "🌿" }, { text: "사진 필름", icon: "📷" } ],
       history: "1811년 베르나르 쿠르투아가 미역을 태운 재에서 발견했습니다. 보라색 연기를 내기 때문에 그리스어 '보라색(Ioeides)'에서 유래했어요."
-    }
+    },
+    compounds: [
+      { formula: "C₆H₉NO·I", name: "포비돈 아이오딘", usage: "상처를 소독할 때 쓰는 진짜 '빨간약'의 성분" },
+      { formula: "KI", name: "아이오딘화 칼륨", usage: "방사선 비상시 갑상선을 보호하기 위해 먹는 약이나 식용 소금의 첨가물" },
+      { formula: "AgI", name: "아이오딘화 은", usage: "인공적으로 비를 내리게 하는 '인공 강우'의 핵심 씨앗" },
+      { formula: "NaI", name: "아이오딘화 나트륨", usage: "방사선을 검출하는 장비나 의료용 진단 시약으로 사용" }
+    ]
   },
   54: {
     id: 54, symbol: "Xe", nameKo: "제논", nameEn: "Xenon",
@@ -548,7 +735,14 @@ const elementDB = {
       description: "시간을 1초의 오차도 없이 아주 정확하게 재는 '원자시계'의 심장이에요. 물에 닿으면 펑! 하고 엄청난 폭발을 일으킨답니다.",
       usage: [ { text: "초정밀 원자시계(GPS)", icon: "⏱️" }, { text: "방사선 치료 기기", icon: "🏥" }, { text: "석유 탐사 장비", icon: "🛢️" } ],
       history: "1860년 분젠과 키르히호프가 분광기로 발견했습니다. 불꽃놀이에서 푸른빛을 내서 라틴어 '하늘색(Caesius)'에서 유래했어요."
-    }
+    },
+    compounds: [
+      { formula: "CsCl", name: "염화 세슘", usage: "원심분리기를 이용해 DNA를 분리할 때 사용하거나 암 치료용 방사선원으로 사용" },
+      { formula: "CsI", name: "아이오딘화 세슘", usage: "X-ray 촬영 장비의 형광체나 입자 물리 실험의 검출기 성분" },
+      { formula: "Cs₂CO₃", name: "탄산 세슘", usage: "유리를 더 투명하고 튼튼하게 만들거나 유기 화학 반응의 촉매로 사용" },
+      { formula: "Cs₂O", name: "산화 세슘", usage: "적외선을 감지하는 야간 투시경의 이미지 증폭 장치 재료" }
+    ]
+
   },
   56: {
     id: 56, symbol: "Ba", nameKo: "바륨", nameEn: "Barium",
@@ -558,7 +752,13 @@ const elementDB = {
       description: "병원에서 위장 엑스레이를 찍을 때 하얗게 보이게 하려고 마시는 약(조영제)에 들어있어요. 불꽃놀이에서는 예쁜 초록색을 내죠.",
       usage: [ { text: "엑스레이 위장 조영제", icon: "🩻" }, { text: "초록색 불꽃놀이", icon: "🎆" }, { text: "진공관 가스 제거", icon: "📻" } ],
       history: "1808년 험프리 데이비가 분리했습니다. 무겁다는 뜻의 그리스어 'Barys'에서 이름을 땄어요."
-    }
+    },
+    compounds: [
+      { formula: "BaSO₄", name: "황산 바륨", usage: "위장 검사 조영제로 쓰이며, 물에 녹지 않아 독성이 몸에 흡수되지 않음" },
+      { formula: "Ba(NO₃)₂", name: "질산 바륨", usage: "불꽃놀이나 조명탄에서 선명한 초록색을 내는 핵심 성분" },
+      { formula: "BaCO₃", name: "탄산 바륨", usage: "특수 유리를 만들거나 쥐약의 성분, 세라믹 유약 등으로 사용" },
+      { formula: "BaO", name: "산화 바륨", usage: "진공관의 음극 코팅이나 특수 광학 유리의 굴절률을 높이는 데 사용" }
+    ]
   },
   57: {
     id: 57, symbol: "La", nameKo: "란타넘", nameEn: "Lanthanum",
@@ -738,7 +938,12 @@ const elementDB = {
       description: "세상 모든 금속 중에서 녹는점(3422℃)이 가장 높아요! 옛날 백열전구가 빛을 낼 수 있었던 것도 이 필라멘트 덕분이죠.",
       usage: [ { text: "백열전구 필라멘트", icon: "💡" }, { text: "강력한 드릴/절단기(초경합금)", icon: "🛠️" }, { text: "다트 화살", icon: "🎯" } ],
       history: "스웨덴어로 '무거운(Tung) 돌(sten)'이라는 뜻입니다. 독일어 이름인 볼프람(Wolfram)에서 기호 W를 땄어요."
-    }
+    },
+    compounds: [
+      { formula: "WC", name: "탄화 텅스텐", usage: "다이아몬드 다음으로 단단하여 터널을 뚫는 드릴이나 금속 절단 도구로 사용" },
+      { formula: "WO₃", name: "삼산화 텅스텐", usage: "전기를 가하면 색이 변하는 스마트 유리나 가스 센서의 재료" },
+      { formula: "CaWO₄", name: "텅스텐산 칼슘", usage: "X-ray 사진을 찍을 때 화면을 더 밝게 보이게 하는 형광체 재료" }
+    ]
   },
   75: {
     id: 75, symbol: "Re", nameKo: "레늄", nameEn: "Rhenium",
@@ -778,7 +983,13 @@ const elementDB = {
       description: "아름다운 은빛을 내는 최고급 귀금속이에요. 보석뿐만 아니라 자동차 배기가스를 맑게 걸러주는 아주 중요한 역할도 한답니다.",
       usage: [ { text: "최고급 보석/반지", icon: "💍" }, { text: "자동차 배기가스 정화장치", icon: "🚗" }, { text: "항암 치료제(시스플라틴)", icon: "💊" } ],
       history: "남미 인디오들이 오래전부터 사용했습니다. 스페인 사람들이 은(Plata)과 비슷하다고 해서 '작은 은(Platina)'이라 불렀어요."
-    }
+    },
+    compounds: [
+      { formula: "cis-[PtCl₂(NH₃)₂]", name: "시스플라틴", usage: "세포 분열을 막아 암세포를 공격하는 아주 유명한 항암제 성분" },
+      { formula: "H₂PtCl₆", name: "염화백금산", usage: "다른 백금 화합물을 만들거나 전해 도금을 할 때 쓰이는 핵심 원료" },
+      { formula: "PtO₂", name: "산화 백금 (아담스 촉매)", usage: "식용유를 만들거나 화학 공정에서 수소를 붙이는 반응을 돕는 강력한 촉매" },
+      { formula: "PtF₆", name: "육플루오린화 백금", usage: "매우 강력한 산화제로, 비활성 기체인 제논과 결합해 화학 역사를 새로 쓴 물질" }
+    ]
   },
   79: {
     id: 79, symbol: "Au", nameKo: "금", nameEn: "Gold",
@@ -788,7 +999,14 @@ const elementDB = {
       description: "아무리 시간이 지나도 녹슬거나 색이 변하지 않는 세상에서 가장 아름답고 귀한 금속이에요.",
       usage: [ { text: "반짝이는 보석과 화폐", icon: "👑" }, { text: "스마트폰 속 정밀 회로", icon: "📱" }, { text: "우주복 헬멧 자외선 코팅", icon: "👩‍🚀" } ],
       history: "라틴어로 '빛나는 새벽'이라는 뜻의 'Aurum'에서 기호 Au가 유래했습니다. 고대부터 부와 권력의 상징이었죠."
-    }
+    },
+    compounds: [
+      { formula: "HAuCl₄", name: "염화금산", usage: "금 전해 도금을 하거나 아주 순도 높은 금을 정제할 때 사용하는 용액" },
+      { formula: "AuCl₃", name: "산화 금(III)", usage: "유리에 섞어 아주 아름다운 루비색 빛을 내는 '금 유리'를 만들 때 사용" },
+      { formula: "Na₃Au(S₂O₃)₂", name: "아우로티오황산 나트륨", usage: "류마티스 관절염을 치료하기 위한 주사약 성분으로 쓰이는 금 화합물" },
+      { formula: "AuCN", name: "사이안화 금(I)", usage: "반도체나 전자기기의 정밀한 금도금 공정에서 쓰이는 산업용 원료" }
+    ]
+
   },
   80: {
     id: 80, symbol: "Hg", nameKo: "수은", nameEn: "Mercury",
@@ -798,7 +1016,13 @@ const elementDB = {
       description: "모든 금속 중 유일하게 상온에서 물처럼 찰랑거리는 은빛 액체예요! 신기하지만 독성이 아주 강해서 조심해야 해요.",
       usage: [ { text: "과거의 온도계와 혈압계", icon: "🌡️" }, { text: "형광등 내부 가스", icon: "💡" }, { text: "치과용 아말감(과거)", icon: "🦷" } ],
       history: "라틴어로 '물(hydro)'과 '은(argyros)'이 합쳐진 Hydrargyrum에서 기호를 땄습니다. 영어로는 로마의 전령 신 '머큐리'입니다."
-    }
+    },
+    compounds: [
+      { formula: "HgO", name: "산화 수은", usage: "산소를 발견하는 실험에 쓰였던 붉은색 가루이며 수은 전지의 원료" },
+      { formula: "HgS", name: "황화 수은", usage: "천연 광물인 '진사'의 성분으로, 아주 선명한 붉은색 안료(주사)로 사용" },
+      { formula: "HgCl₂", name: "염화 수은(II)", usage: "승홍이라 불리는 매우 강력한 독성 물질로, 과거에 소독제로 사용" },
+      { formula: "Ag-Hg / Sn-Hg", name: "아말감", usage: "수은이 다른 금속을 녹여 만든 합금으로, 치과 충전재로 널리 쓰임" }
+    ]
   },
 81: {
     id: 81, symbol: "Tl", nameKo: "탈륨", nameEn: "Thallium",
@@ -818,7 +1042,13 @@ const elementDB = {
       description: "아주 무겁고 빽빽해서 엑스레이(X선)나 방사선을 완벽하게 막아주는 방패 역할을 해요. 무거운 원소들의 최종 은퇴 장소이기도 하죠.",
       usage: [ { text: "병원 엑스레이 방호복", icon: "🩻" }, { text: "자동차 배터리", icon: "🔋" }, { text: "낚시 추", icon: "🎣" } ],
       history: "고대 로마 시대부터 수도관으로 쓰였습니다. 영어 단어 Plumber(배관공)는 납을 뜻하는 라틴어 'Plumbum'에서 유래했어요."
-    }
+    },
+    compounds: [
+      { formula: "PbO₂", name: "산화 납(IV)", usage: "자동차 납축전지의 양극판을 만드는 데 쓰이는 핵심 물질" },
+      { formula: "PbS", name: "황화 납", usage: "천연 광물인 '방연석'의 성분이며, 적외선을 감지하는 센서 재료로 사용" },
+      { formula: "Pb(NO₃)₂", name: "질산 납", usage: "성냥이나 불꽃놀이의 원료, 또는 직물의 색을 입히는 염료 제조" },
+      { formula: "PbO", name: "산화 납(II)", usage: "반사율이 높은 고급 크리스탈 유리나 도자기 유약을 만들 때 사용" }
+    ]
   },
   83: {
     id: 83, symbol: "Bi", nameKo: "비스무트", nameEn: "Bismuth",
@@ -828,7 +1058,12 @@ const elementDB = {
       description: "마치 무지개 계단처럼 화려하고 아름다운 네모난 결정을 만드는 금속이에요. 배가 아플 때 먹는 위장약에도 들어간답니다.",
       usage: [ { text: "무지개빛 금속 결정", icon: "🌈" }, { text: "위장약(펩토비스몰)", icon: "💊" }, { text: "안전한 납 대체재", icon: "🛡️" } ],
       history: "고대부터 알려져 있었지만, 납이나 주석으로 오해받다가 1753년 클로드 프랑수아 조프루아가 독립된 원소로 확인했습니다."
-    }
+    },
+    compounds: [
+      { formula: "C₇H₅BiO₄", name: "비스무트 서브살리실레이트", usage: "분홍색 소화제(페포비스몰)의 주성분으로 배탈이나 설사를 멈추게 함" },
+      { formula: "BiOCl", name: "염화 산화 비스무트", usage: "진주처럼 은은한 광택을 내서 립스틱이나 아이섀도 같은 화장품에 사용" },
+      { formula: "Bi₂O₃", name: "산화 비스무트", usage: "불꽃놀이에서 폭죽이 터질 때 '딱딱' 소리를 내는 효과음 재료로 사용" }
+    ]
   },
   84: {
     id: 84, symbol: "Po", nameKo: "폴로늄", nameEn: "Polonium",
